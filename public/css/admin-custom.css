@@ -1,0 +1,71 @@
+
+
+.custom-section-builder-container>.fi-fo-builder-block-picker .fi-dropdown-trigger button {
+    padding: 10px 20px;
+    border-radius: 0;
+    background: #0089ff;
+    color: #fff;
+    border-color: #0089ff;
+    --tw-ring-color: #0089ff;
+}
+
+.custom-section-builder-container>.fi-fo-builder-block-picker .fi-dropdown-trigger button:hover {
+    background-color: transparent;
+    color: #0089ff;
+}
+
+.custom-section-builder-container .fi-tabs {
+    padding: 0;
+}
+
+.custom-section-builder-container>ul>.fi-fo-builder-item>.fi-fo-builder-item-content {
+    padding: 0;
+    border-top: 0;
+}
+.custom-section-builder-container .custom-builder-container-tabs {
+    border-top-right-radius: 0;
+    border-top-left-radius: 0;
+    border-top: 0;
+}
+.custom-section-builder-container > ul > .fi-fo-builder-item {
+    border-style: dashed;
+    --tw-ring-color: transparent;
+    border-color: #3490dc;
+    border-width: 2px;
+}
+.custom-section-builder-container .custom-builder-container-tabs [id*="-content-tab"] {
+    padding: 10px;
+}
+.custom-section-builder-container .custom-builder-container-tabs > nav button.fi-tabs-item-active {
+    border-radius: 0;
+    background: #0089ff;
+}
+.custom-section-builder-container .custom-builder-container-tabs > nav button.fi-tabs-item-active span {
+    color: #fff;
+}
+.custom-block-repeator .fi-fo-repeater-item-content {
+    padding: 0
+}
+.custom-block-repeator > ul > div > li.fi-fo-repeater-item {
+    border-style: dashed;
+    --tw-ring-color: transparent;
+    border-color: #38c172;
+    border-width: 2px;
+}
+.custom-block-repeator > div > .fi-btn {
+    border-color: #38c172;
+    background-color: #38c172;
+    color: #fff;
+    border-radius: 0;
+    --tw-ring-color: #38c172;
+}
+.custom-block-repeator .custom-block-repeator-tabs > nav button.fi-tabs-item-active {
+    border-radius: 0;
+    background: #38c172;
+}
+.custom-block-repeator .custom-block-repeator-tabs > nav button.fi-tabs-item-active span {
+    color: #fff;
+}
+.custom-builder-container-tab-style {
+    padding: 0;
+}
