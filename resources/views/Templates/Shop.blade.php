@@ -120,7 +120,9 @@
                             @if ($products->count() > 0)
 
                             <div class="product-list row" data-page="{{ $products->currentPage() }}" data-last-page="{{ $products->lastPage() }}" data-total-pages="{{ $products->total() }}" data-to="{{ $products->count() }}">
+                                
                                 @foreach ($products as $items)
+                                <div class="col-4 item">
                                 @include('components.product-card', ['items' => $items])
                                 @endforeach
                             </div>
@@ -132,7 +134,7 @@
                             </div>
                             @endif
 
-                            
+
                         </div>
                     </div>
                 </div>

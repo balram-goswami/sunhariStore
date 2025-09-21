@@ -90,39 +90,6 @@ class UserResource extends Resource
                         ->toArray()
                 ),
 
-            Forms\Components\Fieldset::make('Commission')
-                ->relationship('commission')
-                ->schema([
-                    Forms\Components\Select::make('type')
-                        ->label('Commission Type')
-                        ->options([
-                            'percentage' => 'Percentage',
-                            'fixed' => 'Fixed Amount',
-                        ])
-                        ->default(fn($record) => $record?->commission?->type)
-                        ->dehydrated()
-                        ->required(),
-
-                    Forms\Components\TextInput::make('value')
-                        ->label('Commission Value')
-                        ->numeric()
-                        ->default(fn($record) => $record?->commission?->value)
-                        ->dehydrated()
-                        ->required(),
-
-                    Forms\Components\TextInput::make('min_amount')
-                        ->label('Minimum Commission')
-                        ->numeric()
-                        ->default(fn($record) => $record?->commission?->min_amount)
-                        ->dehydrated(),
-
-                    Forms\Components\TextInput::make('max_amount')
-                        ->label('Maximum Commission')
-                        ->numeric()
-                        ->default(fn($record) => $record?->commission?->max_amount)
-                        ->dehydrated(),
-                ]),
-
             Forms\Components\TextInput::make('password')
                 ->password()
                 ->maxLength(255)

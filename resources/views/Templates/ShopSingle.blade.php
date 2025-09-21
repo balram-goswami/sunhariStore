@@ -539,8 +539,11 @@
                                                             alt="{{ $items->name }}">
 
                                                         @if (!empty($items->sale_price))
+                                                        @php
+        $percent = (($items->price - $items->sale_price) / $items->price) * 100;
+        @endphp
                                                         <div class="product-labels rectangular">
-                                                            <span class="lbl on-sale">- %</span>
+                                                            <span class="lbl on-sale">- {{$percent}}%</span>
                                                             <span class="lbl pr-label1">new</span>
                                                         </div>
                                                         @endif
@@ -555,7 +558,7 @@
                                                     <!-- Start product button -->
                                                     @if ($items->qty > 0)
                                                     <div class="variants add">
-                                                        <button class="btn btn-add-to-cart"
+                                                        <!-- <button class="btn btn-add-to-cart"
                                                             data-id="{{ $items->id }}" data-qty="1">
                                                             Add to Cart
                                                         </button>
@@ -566,7 +569,11 @@
                                                                 href="">
                                                                 <i class="icon anm anm-heart-l"></i>
                                                             </a>
-                                                        </div>
+                                                        </div> -->
+                                                        <a href="{{ url('/order-whatsapp/'.$items->id) }}"
+            class="btn btn-success">
+            Order on WhatsApp
+        </a>
                                                     </div>
                                                     @else
                                                     <div class="variants add">

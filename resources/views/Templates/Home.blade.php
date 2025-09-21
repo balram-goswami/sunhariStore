@@ -51,86 +51,11 @@
                             <div class="tab_content grid-products">
                                 <div class="productSlider">
 
-                                    @foreach ($product as $items)
+                                    @foreach ($products as $items)
                                     <div class="col-12 item">
-                                        <!-- start product image -->
-                                        <div class="product-image">
-                                            <!-- start product image -->
-                                            <a href="{{ route('product', $items->slug) }}">
-                                                <img class="primary"
-                                                    src="{{ asset('storage/' . $items->image_array[0]) }}"
-                                                    alt="{{ $items->name }}">
-
-                                                <img class="hover"
-                                                    src="{{ asset('storage/' . ($items->image_array[1] ?? $items->image_array[0])) }}"
-                                                    alt="{{ $items->name }}">
-
-                                                @if (!empty($items->sale_price))
-                                                <div class="product-labels rectangular">
-                                                    <span class="lbl on-sale">- %</span>
-                                                    <span class="lbl pr-label1">new</span>
-                                                </div>
-                                                @endif
-                                                <!-- End product label -->
-                                            </a>
-                                            <!-- end product image -->
-
-                                            <!-- countdown start -->
-                                            <!-- <div class="saleTime desktop" data-countdown="2022/03/01"></div> -->
-                                            <!-- countdown end -->
-
-                                            <!-- Start product button -->
-                                            @if ($items->qty > 0)
-                                            <div class="variants add">
-                                                <button class="btn btn-add-to-cart"
-                                                    data-id="{{ $items->id }}" data-qty="1">
-                                                    Add to Cart
-                                                </button>
-                                            </div>
-                                            <div class="button-set">
-                                                <div class="wishlist-btn">
-                                                    <a class="wishlist add-to-wishlist"
-                                                        href="">
-                                                        <i class="icon anm anm-heart-l"></i>
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            @else
-                                            <div class="variants add">
-                                                <button class="btn btn-add-to-cart">
-                                                    Coming Soon
-                                                </button>
-                                            </div>
-                                            @endif
-                                        </div>
-
-                                        <div class="product-details text-center">
-                                            <div class="product-name">
-                                                <a
-                                                    href="{{ route('product', $items->slug) }}">{{ $items->name }}</a>
-                                            </div>
-
-                                            @if (!empty($items->sale_price))
-                                            <div class="product-price">
-                                                <span class="old-price">₹ {{ $items->price }}</span>
-                                                <span class="price"> ₹{{ $items->sale_price }}</span>
-                                            </div>
-                                            @else
-                                            <div class="product-price">
-                                                <span class="price">₹ {{ $items->price }}</span>
-                                            </div>
-                                            @endif
-
-                                            <div class="product-review">
-                                                <i class="font-13 fa fa-star"></i>
-                                                <i class="font-13 fa fa-star"></i>
-                                                <i class="font-13 fa fa-star"></i>
-                                                <i class="font-13 fa fa-star"></i>
-                                                <i class="font-13 fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @include('components.product-card' , compact('items'))
                                     @endforeach
+                                    
                                 </div>
                             </div>
 
@@ -145,7 +70,7 @@
         <div class="container-fluid">
             <div class="collection-grid">
                 <div class="collection-grid-item">
-                    <a href="{{ url('lehenga') }}" class="collection-grid-item__link">
+                    <a href="{{ route('products') }}" class="collection-grid-item__link">
                         <img data-src="{{ publicPath('themeAssets/demo/1.png') }}"
                             src="{{ publicPath('themeAssets/demo/1.png') }}" alt="Fashion" class="blur-up lazyload" />
                         <div class="collection-grid-item__title-wrapper">
@@ -154,7 +79,7 @@
                     </a>
                 </div>
                 <div class="collection-grid-item">
-                    <a href="{{ url('lehenga') }}" class="collection-grid-item__link">
+                    <a href="{{ route('products') }}" class="collection-grid-item__link">
                         <img class="blur-up lazyload" data-src="{{ publicPath('themeAssets/demo/3.png') }}"
                             src="{{ publicPath('themeAssets/demo/3.png') }}" alt="Cosmetic" />
                         <div class="collection-grid-item__title-wrapper">
@@ -163,7 +88,7 @@
                     </a>
                 </div>
                 <div class="collection-grid-item blur-up lazyloaded">
-                    <a href="{{ url('lehenga') }}" class="collection-grid-item__link">
+                    <a href="{{ route('products') }}" class="collection-grid-item__link">
                         <img data-src="{{ publicPath('themeAssets/demo/4.png') }}"
                             src="{{ publicPath('themeAssets/demo/4.png') }}" alt="Bag"
                             class="blur-up lazyload" />
@@ -173,7 +98,7 @@
                     </a>
                 </div>
                 <div class="collection-grid-item">
-                    <a href="{{ url('lehenga') }}" class="collection-grid-item__link">
+                    <a href="{{ route('products') }}" class="collection-grid-item__link">
                         <img data-src="{{ publicPath('themeAssets/demo/2.png') }}"
                             src="{{ publicPath('themeAssets/demo/2.png') }}" alt="Accessories"
                             class="blur-up lazyload" />
@@ -184,7 +109,7 @@
                     </a>
                 </div>
                 <div class="collection-grid-item">
-                    <a href="{{ url('lehenga') }}" class="collection-grid-item__link">
+                    <a href="{{ route('products') }}" class="collection-grid-item__link">
                         <img data-src="{{ publicPath('themeAssets/demo/5.png') }}"
                             src="{{ publicPath('themeAssets/demo/5.png') }}" alt="Shoes"
                             class="blur-up lazyload" />
@@ -245,7 +170,9 @@
             </div>
             <div class="grid-products">
                 <div class="row">
-                    @foreach ($product as $items)
+
+                    @foreach ($products as $items)
+                   
 
                     <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
                         <div class="grid-view_image">
@@ -260,8 +187,11 @@
                                     alt="{{ $items->name }}">
 
                                 @if (!empty($items->sale_price))
+                                 @php
+        $percent = (($items->price - $items->sale_price) / $items->price) * 100;
+        @endphp
                                 <div class="product-labels rectangular">
-                                    <span class="lbl on-sale">- %</span>
+                                    <span class="lbl on-sale">-{{ $percent }} %</span>
                                     <span class="lbl pr-label1">new</span>
                                 </div>
                                 @endif

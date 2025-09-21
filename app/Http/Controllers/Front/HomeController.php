@@ -18,7 +18,7 @@ class HomeController extends Controller
   public function homePage()
   {
     $view = "Templates.Home"; 
-    $product = Product::where('status', 2)->get(); 
+    $products = Product::where('status', 2)->orderBy('id', 'desc')->limit(4)->get();
 
     $breadcrumbs = [
       'title' => '',
@@ -30,7 +30,7 @@ class HomeController extends Controller
       ]
     ];
 
-    return view('Front', compact('view', 'product'));
+    return view('Front', compact('view', 'products'));
   }
   
   public function profile()
