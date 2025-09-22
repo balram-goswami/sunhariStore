@@ -15,7 +15,7 @@
                 <div class="mb-4">
                     <form action="{{ route('login.store') }}" method="POST" class="login contact-form"
                         id="formAuthentication">
-                         @csrf
+                        @csrf
                         <div class="row">
                             <div class="col-12 col-sm-12 col-md-12 col-lg-12">
                                 <div class="form-group">

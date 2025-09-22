@@ -34,12 +34,8 @@ use Filament\Notifications\Notification;
 class ProductResource extends Resource
 {
     protected static ?string $model = Product::class;
-
     protected static ?string $navigationGroup = 'Products';
-
     protected static ?string $navigationIcon = 'heroicon-o-cube';
-
-
 
     public static function form(Form $form): Form
     {
@@ -71,14 +67,14 @@ class ProductResource extends Resource
                                         'strike',
                                         'underline',
                                     ])
-                                    ->rule('max_words:2000')
+                                    ->rule('max_words:1000')
                                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Full product description with details.'),
 
                                 Forms\Components\Textarea::make('excerpt')
                                     ->label('Short description')
                                     ->rows(3)
                                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'A short summary that shows in listings.')
-                                    ->rule('max_words:20'),
+                                    ->rule('max_words:40'),
 
                                 Forms\Components\KeyValue::make('spec')
                                     ->label('Specification')
@@ -220,12 +216,12 @@ class ProductResource extends Resource
 
                 \Filament\Tables\Columns\TextInputColumn::make('qty')
                     ->label('Stock')
-                    ->type('number') // numeric input
+                    ->type('number')
                     ->extraInputAttributes([
                         'min'  => 0,
                         'step' => '1',
-                    ]) // HTML attributes for the <input>
-                    ->rules(['integer', 'min:0']) // Laravel validation
+                    ])
+                    ->rules(['integer', 'min:0'])
                     ->sortable(),
 
 

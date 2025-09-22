@@ -27,11 +27,6 @@ Route::get('product/{slug}', [ShopController::class, 'product'])
     ->name('product')
     ->where('slug', '[a-zA-Z0-9-]+');
 
-// Auth (Login/Register)
-Route::get('login', [LoginController::class, 'show'])->name('login');
-Route::post('login', [LoginController::class, 'store'])->name('login.store');
-Route::get('register', [RegisterController::class, 'show'])->name('register');
-Route::post('register', [RegisterController::class, 'store'])->name('register.store');
 
 // Contact & Subscription Forms
 Route::post('contactus-form', [HomeController::class, 'contactUsForm'])->name('contactus.form');
@@ -39,8 +34,6 @@ Route::post('subscribe-form', [HomeController::class, 'subscribeForm'])->name('s
 
 // Misc
 Route::get('form-save', [HomeController::class, 'formsave'])->name('form.save');
-
-Route::get('profile', [HomeController::class, 'profile'])->name('profile');
 
 Route::get('cart', [CartController::class, 'cart'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -111,8 +104,8 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+
+    Route::get('profile', [HomeController::class, 'profile'])->name('profile');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 

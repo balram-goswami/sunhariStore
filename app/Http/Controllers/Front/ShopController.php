@@ -52,8 +52,18 @@ class ShopController extends Controller
             $categories = ProductCategory::where('status', 1)->get();
             $products = $this->productService->getProducts($request);
 
+            $breadcrumbs = [
+                'title' => $data->meta_title ?? 'Sunhari',
+                'metaTitle' => $data->meta_title ?? 'Sunhari',
+                'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+                'metaKeyword' => '',
+                'links' => [
+                    ['url' => url('/'), 'title' => 'Home']
+                ]
+            ];
+
             $view = 'Templates.Shop';
-            return view('Front', compact('view', 'products', 'brands', 'categories'));
+            return view('Front', compact('view', 'products', 'brands', 'categories', 'breadcrumbs'));
         } catch (\Exception $e) {
             Log::error($e);
             return response()->json(['error' => $e->getMessage()], 500);
@@ -113,9 +123,15 @@ class ShopController extends Controller
             ];
         }
 
+        $breadcrumbs = [
+            'title' => $product->seo_title ?? 'Sunhari',
+            'metaTitle' => $product->meta_title ?? 'Sunhari -Shop',
+            'metaDescription' => $product->seo_desc ?? 'Sunhari -  Where Tradition Shines',
+            'metaKeyword' => $product->seo_keywords ?? '',
+        ];
         $allproduct = Product::where('status', 2)->get();
         $view = 'Templates.ShopSingle';
-        return view('Front', compact('view', 'product', 'relatedProduct', 'variants', 'categories', 'allproduct'));
+        return view('Front', compact('view', 'product', 'relatedProduct', 'variants', 'categories', 'allproduct', 'breadcrumbs'));
     }
 
     public function reviewPost(Request $request)

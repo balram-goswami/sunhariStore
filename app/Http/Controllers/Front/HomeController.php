@@ -17,46 +17,76 @@ class HomeController extends Controller
 
   public function homePage()
   {
-    $view = "Templates.Home"; 
+    $view = "Templates.Home";
     $products = Product::where('status', 2)->orderBy('id', 'desc')->limit(4)->get();
 
+    $data = siteSetting();
     $breadcrumbs = [
-      'title' => '',
-      'metaTitle' => '',
-      'metaDescription' => '',
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
       'metaKeyword' => '',
       'links' => [
         ['url' => url('/'), 'title' => 'Home']
       ]
     ];
 
-    return view('Front', compact('view', 'products'));
+    return view('Front', compact('view', 'products', 'breadcrumbs'));
   }
-  
+
   public function profile()
   {
+    $userData = Auth::user();
+
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
+
     $view = "Templates.Profile";
 
-    return view('Front', compact('view'));
+    return view('Front', compact('view', 'userData', 'breadcrumbs'));
   }
 
   public function contuctUs()
   {
     $view = "Templates.ContactUs";
     $contact = SiteSetting::first();
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
 
-    return view('Front', compact('view', 'contact'));
+    return view('Front', compact('view', 'contact', 'breadcrumbs'));
   }
 
   public function aboutUs()
   {
     $view = "Templates.AboutUs";
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
 
-
-    return view('Front', compact('view'));
+    return view('Front', compact('view', 'breadcrumbs'));
   }
 
-  
+
   private function mailAddress()
   {
     return [

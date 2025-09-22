@@ -1,18 +1,20 @@
 @php
 $data = siteSetting();
 @endphp
-
 <!DOCTYPE html>
 <html class="no-js" lang="en">
 
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>{{ $data->meta_title ?? 'Sunhari'}}</title>
-    <meta name="description" content="{{ $data->meta_description ?? 'Sunhari -  Where Tradition Shines' }}">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="shortcut icon"
-        href="{{ $data && $data->favicon ? asset('storage/' . $data->favicon) : asset('assets/img/icons/3.png') }}" />
+
+    <title>{{ $breadcrumbs['title'] ?? ''}}</title>
+    <meta name="description" content="{{ $breadcrumbs['metaDescription'] ?? ''}}">
+    <meta name="keywords" content="{{ $breadcrumbs['metaKeyword'] ?? ''}}">
+    <link rel="canonical" href="{{ route('homePage') }}">
+
+    <link rel="shortcut icon" href="{{ $data && $data->favicon ? asset('storage/' . $data->favicon) : asset('assets/img/icons/3.png') }}" />
 
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
