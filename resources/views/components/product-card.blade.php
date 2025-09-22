@@ -29,7 +29,7 @@
 
     <!-- Start product button -->
     @if ($items->qty > 0)
-    @if($items->has_variants)
+    <!-- @if($items->has_variants)
     <div class="variants add">
         <a href="{{ route('product', $items->slug) }}" class="btn"
             style="letter-spacing: 0;">Select Options</a>
@@ -49,14 +49,14 @@
             </a>
         </div>
     </div>
-    @endif
+    @endif -->
 
-    <!-- <div class="variants add">
+    <div class="variants add">
         <a href="{{ url('/order-whatsapp/'.$items->id) }}"
             class="btn btn-success">
             Order on WhatsApp
         </a>
-    </div> -->
+    </div>
     @else
     <div class="variants add">
         <button class="btn btn-add-to-cart">
