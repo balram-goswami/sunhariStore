@@ -185,7 +185,7 @@ $count = Cart::instance('shopping')->count();
             </li>
 
             <ul class="customer-links list-inline">
-                <li><a href="">Contact Us</a></li>
+                <li><a href="{{ route('contuct-us') }}">Contact Us</a></li>
                 <li><a href="{{ route('about-us') }}">About Us</a></li>
                 <li><a href="{{ route('products') }}">Shop</a></li>
                 @auth

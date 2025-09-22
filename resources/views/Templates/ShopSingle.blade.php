@@ -540,10 +540,10 @@
 
                                                         @if (!empty($items->sale_price))
                                                         @php
-        $percent = (($items->price - $items->sale_price) / $items->price) * 100;
-        @endphp
+                                                        $percent = (($items->price - $items->sale_price) / $items->price) * 100;
+                                                        @endphp
                                                         <div class="product-labels rectangular">
-                                                            <span class="lbl on-sale">- {{$percent}}%</span>
+                                                            <span class="lbl on-sale">- {{ round($percent) }}%</span>
                                                             <span class="lbl pr-label1">new</span>
                                                         </div>
                                                         @endif
@@ -571,9 +571,9 @@
                                                             </a>
                                                         </div> -->
                                                         <a href="{{ url('/order-whatsapp/'.$items->id) }}"
-            class="btn btn-success">
-            Order on WhatsApp
-        </a>
+                                                            class="btn btn-success">
+                                                            Order on WhatsApp
+                                                        </a>
                                                     </div>
                                                     @else
                                                     <div class="variants add">

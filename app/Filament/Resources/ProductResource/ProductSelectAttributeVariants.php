@@ -8,13 +8,14 @@ use App\Models\AttributeValue;
 use Filament\Forms;
 use Illuminate\Support\Str;
 use App\Models\ProductVariation;
+use Illuminate\Support\Facades\Session;
 
 class ProductSelectAttributeVariants
 {
     public static function make(): array
     {
         return [
-            
+
             Forms\Components\Hidden::make('variations')->default([
                 'product_variations' => [],
                 'previous_variations' => [],
@@ -41,9 +42,9 @@ class ProductSelectAttributeVariants
                     ];
                 })->afterStateHydrated(function ($state, $set, $get, $livewire) {
                     $product = $livewire->getRecord();
-                    if($product && $product->has_variants) {
+                    if ($product && $product->has_variants) {
                         $variations = ProductVariation::where('product_id', $product->id)->get();
-                        if($variations->count()) {
+                        if ($variations->count()) {
                             $variations = $variations->toArray();
                             $set('variations.product_variations', $variations);
                         }
@@ -52,16 +53,23 @@ class ProductSelectAttributeVariants
         ];
     }
 
-    private static function autoSKU($sku): string
+    private static function autoSKU(string $baseSku, array $attributes = []): string
     {
-        return Str::upper(Str::slug($sku, '-'));
+        $sku = Str::upper(Str::slug($baseSku, '-'));
+
+        if (!empty($attributes)) {
+            foreach ($attributes as $attr) {
+                $sku .= '-' . Str::upper(Str::slug($attr, '-'));
+            }
+        }
+        return $sku;
     }
 
     private static function generateCombinations($get, $set, $livewire = null)
     {
         $attributesRows = $get('product_attributes') ?? [];
         $previousVariations = $get('variations')['previous_variations'] ?? [];
-        
+
         if (empty($attributesRows))
             return;
 
@@ -71,21 +79,20 @@ class ProductSelectAttributeVariants
         $validAttributes = array_filter($attributesRows, fn($a) => !empty($a['attribute_id']) && !empty($a['attribute_value_id']));
         if (empty($validAttributes))
             return;
-        
+
         $attributeIds = collect($validAttributes)->pluck('attribute_id')->toArray();
         $attributeValueIds = collect($validAttributes)->pluck('attribute_value_id')->flatten()->toArray();
-        
+
         $attributeData = Attribute::with(['values' => function ($query) use ($attributeValueIds) {
             $query->select('id', 'value', 'attribute_id');
             $query->whereIn('id', $attributeValueIds);
         }])
-            ->where('domain_id', 1)
             ->select('id', 'name')
             ->whereIn('id', $attributeIds)
             ->get();
-            
+
         $product_attribute_count = $attributeData->count();
-        
+
         self::setOutdatedVariants(
             $edited,
             $product_attribute_count,
@@ -93,7 +100,7 @@ class ProductSelectAttributeVariants
         );  // outdated variants
 
         $editedVariants = self::editedVariants($edited);  // edited variants
-        
+
         $deletedVariants = self::deletedVariants($edited);  // deleted variants
         [$signature, $combinations] = self::cartesianProduct($attributeData);  // new combinations variants
 
@@ -104,7 +111,7 @@ class ProductSelectAttributeVariants
 
         $set('variations.product_variations', array_values($allVariants));
 
-        $set('variations.previous_variations',[
+        $set('variations.previous_variations', [
             'variations' => array_values($allVariants),
             'signature' => $signature,
         ]);
@@ -124,8 +131,8 @@ class ProductSelectAttributeVariants
 
     private static function setOutdatedVariants(&$editedVariants, $product_attribute_count, $set): void
     {
-        foreach($editedVariants as &$variant) {
-            if($variant['attribute_count'] != $product_attribute_count) {
+        foreach ($editedVariants as &$variant) {
+            if ($variant['attribute_count'] != $product_attribute_count) {
                 $variant['is_outdated'] = true;
             }
         }
@@ -153,17 +160,30 @@ class ProductSelectAttributeVariants
     {
         $final = [];
         foreach ($combinations as $combo) {
+            // Base SKU (product ka main SKU)
+            $baseSku = $get('sku') ?? 'PRODUCT';
+
+            // Variant attributes ko nikalna (color, size, etc.)
+            $attributes = $combo['attributes'] ?? [];
+
+            // Auto SKU generate karna
+            $variantSku = self::autoSKU($baseSku, $attributes);
+
             $final[] = [
                 'id' => null,
                 'pair_id' => $combo['pair_id'],
                 'label' => $combo['label'],
-                'sku' => $get('sku') ?? self::autoSKU($combo['label']),
-                'attributes' => $combo['attributes'],
+                'sku' => $variantSku,
+                'attributes' => $attributes,
                 'price' => $get('price') ?? 0,
                 'sale_price' => $get('sale_price') ?? null,
                 'stock' => $get('qty') ?? 0,
                 'weight' => null,
-                'dimensions' => ['length' => null, 'width' => null, 'height' => null],
+                'dimensions' => [
+                    'length' => null,
+                    'width' => null,
+                    'height' => null,
+                ],
                 'attribute_count' => $combo['attribute_count'],
                 'is_available' => true,
                 'is_outdated' => false,
@@ -173,6 +193,7 @@ class ProductSelectAttributeVariants
         }
         return $final;
     }
+
 
     private static function cartesianProduct(\Illuminate\Support\Collection|array $attributes): array
     {
@@ -211,7 +232,7 @@ class ProductSelectAttributeVariants
 
             sort($pairs);
             $pair_id = implode('-', $pairs);
-            
+
             return [
                 'pair_id' => md5($pair_id),
                 'combination' => $combination,

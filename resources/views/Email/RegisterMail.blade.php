@@ -74,7 +74,7 @@
             <p>You can now log in to your dashboard and start managing your products and orders:</p>
 
             <p>
-                <a href="{{ config('app.url') }}/login" class="button">Login to Your Vendor Dashboard</a>
+                <a href="{{ route('login') }}" class="button">Login to Your Vendor Dashboard</a>
             </p>
 
             <p>If you have any questions or need assistance, feel free to reach out to our support team.</p>

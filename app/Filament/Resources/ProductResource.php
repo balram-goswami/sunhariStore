@@ -39,8 +39,8 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-cube';
 
-    
-    
+
+
     public static function form(Form $form): Form
     {
         $productRecord = $form->getRecord();
@@ -88,7 +88,10 @@ class ProductResource extends Resource
 
                         Section::make('Pricing')->schema([
                             Forms\Components\Group::make([
-                                Forms\Components\TextInput::make('sku')->label('SKU'),
+                                Forms\Components\TextInput::make('sku')
+                                    ->label('SKU')
+                                    ->default(fn() => 'SUNHARI-' . str_pad(rand(0, 9999), 4, '0', STR_PAD_LEFT))
+                                    ->readOnly(),
                                 Split::make([
                                     Forms\Components\TextInput::make('price')->label('Regular Price')->default(0)->numeric()->required(),
 
@@ -113,7 +116,7 @@ class ProductResource extends Resource
                                         Tabs\Tab::make('Variants')
                                             ->schema(ProductSelectAttributeVariantsComponent::make($productRecord))->extraAttributes(['style' => 'padding: 4px;']),
                                     ])->visible(fn($get) => $get('has_variants')),
-                                    
+
                             ])
                             ->collapsible(),
 
@@ -130,7 +133,7 @@ class ProductResource extends Resource
                     ]),
 
                     Section::make([
-                        
+
 
                         Select::make('brand_id')
                             ->label('Fabric Used')
@@ -159,7 +162,7 @@ class ProductResource extends Resource
                                     ->toArray()
                             )
                             ->default(ProductStatus::Draft->value)
-                            ->disablePlaceholderSelection() 
+                            ->disablePlaceholderSelection()
                             ->hintIcon(
                                 'heroicon-m-question-mark-circle',
                                 tooltip: 'Draft: hidden, Published: visible.'
@@ -215,9 +218,16 @@ class ProductResource extends Resource
                     ->separator(', ')
                     ->getStateUsing(fn($record) => $record->category_names),
 
-                \Filament\Tables\Columns\TextColumn::make('qty')
-                    ->sortable()
-                    ->label('Stock'),
+                \Filament\Tables\Columns\TextInputColumn::make('qty')
+                    ->label('Stock')
+                    ->type('number') // numeric input
+                    ->extraInputAttributes([
+                        'min'  => 0,
+                        'step' => '1',
+                    ]) // HTML attributes for the <input>
+                    ->rules(['integer', 'min:0']) // Laravel validation
+                    ->sortable(),
+
 
                 \Filament\Tables\Columns\TextColumn::make('variants_count')
                     ->counts('variants')

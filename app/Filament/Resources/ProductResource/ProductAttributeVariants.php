@@ -34,7 +34,6 @@ class ProductAttributeVariants
                                 ->toArray();
 
                             return Attribute::query()
-                                ->where('domain_id', Session::get('tenant_id', 1))
                                 ->whereNotIn('id', $selectedIds)
                                 ->pluck('name', 'id')
                                 ->toArray();
@@ -53,7 +52,6 @@ class ProductAttributeVariants
                             $user = Auth::user();
 
                             $existing = Attribute::where('name', $data['name'])
-                                ->where('domain_id', $domainId)
                                 ->first();
 
                             if ($existing) {
@@ -65,14 +63,12 @@ class ProductAttributeVariants
                             $attribute = Attribute::create([
                                 'name' => $data['name'],
                                 'user_id' => $user->id,
-                                'domain_id' => $domainId,
                             ]);
 
                             if (!empty($data['attribute_values'])) {
                                 foreach ($data['attribute_values'] as $valueData) {
                                     $attribute->values()->create([
                                         'value' => $valueData['value'],
-                                        'domain_id' => $domainId,
                                     ]);
                                 }
                             }
@@ -80,7 +76,6 @@ class ProductAttributeVariants
                             // Refresh options
                             $component->options(
                                 Attribute::query()
-                                    ->where('domain_id', $domainId)
                                     ->pluck('name', 'id')
                                     ->toArray()
                             );
@@ -114,8 +109,7 @@ class ProductAttributeVariants
                         ])
                         ->createOptionUsing(function (array $data, Select $component, $get) {
                             $attributeId = $get('attribute_id');
-                            $domainId = Session::get('tenant_id');
-                            $attribute = Attribute::where('domain_id', $domainId)->find($attributeId);
+                            $attribute = Attribute::find($attributeId);
 
                             if (!$attribute || empty($data['value'])) return;
 
