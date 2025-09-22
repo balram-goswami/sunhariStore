@@ -123,8 +123,6 @@
             </div>
         </div>
 
-        
-
         <div class="product-rows section">
             <div class="container">
                 <div class="row">
@@ -266,7 +264,7 @@
             let token = $('meta[name="csrf-token"]').attr('content');
 
             $.ajax({
-                url: "{{ route('add-to-cart') }}",
+                url: "{{ route('cart.add') }}",
                 type: "POST",
                 data: {
                     _token: token,

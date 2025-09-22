@@ -12,3 +12,71 @@
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+
+
+<script>
+    const csrfToken = "{{ csrf_token() }}";
+    const addToCartUrl = "{{ route('cart.add') }}";
+    const cartUpdateUrl = "{{ route('cart.updateQuantity') }}";
+    const cartRemoveUrl = "{{ route('cart.removeItem') }}";
+</script>
+<script src="{{ asset('cart.js') }}"></script>
+<script src="{{ asset('product-detail.js') }}"></script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    $(document).ready(function() {
+
+
+        // Add/Remove wishlist
+        $(document).on('click', '.wishlist-toggle', function(e) {
+            e.preventDefault();
+
+            var productId = $(this).data('product-id');
+            var rowId = $(this).data('row-id');
+            var $btn = $(this);
+
+            if (rowId) {
+                // Remove from wishlist
+                $.post("{{ route('wishlist.remove') }}", {
+                    _token: "{{ csrf_token() }}",
+                    rowId: rowId
+                }, function(res) {
+                    if (res.success) {
+                        $btn.find("img").attr("src", "{{ publicPath('themeData/img/icon/heart.png') }}");
+                        $btn.data("row-id", "");
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Removed!',
+                            text: 'Product removed from wishlist',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            } else {
+                // Add to wishlist
+                $.post("{{ route('wishlist.add') }}", {
+                    _token: "{{ csrf_token() }}",
+                    product_id: productId
+                }, function(res) {
+                    if (res.success) {
+                        $btn.find("img").attr("src", "{{ publicPath('themeData/img/icon/redheart.png') }}");
+                        $btn.data("row-id", res.rowId);
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Added!',
+                            text: 'Product added to wishlist',
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                    }
+                });
+            }
+        });
+
+
+    });
+</script>

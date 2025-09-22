@@ -25,7 +25,7 @@
                         </div>
                         <div class="widget-content">
                             <ul class="sidebar_categories">
-                                <li class=""><a href="" class="site-nav">Categories</a>
+                                <li class="">
                                     <ul>
                                         @foreach ($categories as $cat)
                                         <label>
@@ -36,21 +36,25 @@
                                         @endforeach
                                     </ul>
                                 </li>
-                                <li class=""><a href="#;" class="site-nav">Fabric</a>
-                                    <ul class="sublinks">
-                                        @foreach ($brands as $brand)
-                                        <li>
-                                            <label>
-                                                <input type="checkbox" class="filter-brand"
-                                                    value="{{ $brand->id }}">
-                                                {{ $brand->name }}
-                                            </label>
-                                        </li>
-                                        @endforeach
-                                    </ul>
-                                </li>
-
                             </ul>
+                        </div>
+                        <div class="sidebar_widget categories filter-widget">
+                            <div class="widget-title">
+                                <h2>Fabric</h2>
+                            </div>
+                            <li class="">
+                                <ul class="sublinks">
+                                    @foreach ($brands as $brand)
+                                    <li>
+                                        <label>
+                                            <input type="checkbox" class="filter-brand"
+                                                value="{{ $brand->id }}">
+                                            {{ $brand->name }}
+                                        </label>
+                                    </li>
+                                    @endforeach
+                                </ul>
+                            </li>
                         </div>
                     </div>
                 </div>
@@ -58,7 +62,7 @@
 
             <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
                 <div class="category-description">
-                    <h3></h3>
+                    <h3>✨ Step into timeless elegance with our designer lehenga collection. Crafted from luxurious fabrics, adorned with intricate embroidery, and designed to flatter every silhouette, each piece brings a blend of tradition and modern charm. Perfect for weddings, festivities, or grand celebrations – make every occasion unforgettable with your dream lehenga.</h3>
                 </div>
                 <hr>
                 <div class="productList">
@@ -110,7 +114,7 @@
                                     </div>
                                 </div>
 
-                            </div>
+                            </div>    
                         </div>
                     </div>
                     <!--End Toolbar-->
@@ -120,35 +124,35 @@
                             @if ($products->count() > 0)
 
                             <div class="product-list row" data-page="{{ $products->currentPage() }}" data-last-page="{{ $products->lastPage() }}" data-total-pages="{{ $products->total() }}" data-to="{{ $products->count() }}">
-                                
+
                                 @foreach ($products as $items)
                                 <div class="col-4 item">
-                                @include('components.product-card', ['items' => $items])
-                                @endforeach
+                                    @include('components.product-card', ['items' => $items])
+                                    @endforeach
+                                </div>
+
+                                <div class="loading-spinner loading-spinner-product text-center">Loading...</div>
+                                @else
+                                <div class="col-12 text-center mt-4">
+                                    <p>No Product Found, try another category or brand.</p>
+                                </div>
+                                @endif
+
+
                             </div>
-
-                            <div class="loading-spinner loading-spinner-product text-center">Loading...</div>
-                            @else
-                            <div class="col-12 text-center mt-4">
-                                <p>No Product Found, try another category or brand.</p>
-                            </div>
-                            @endif
-
-
                         </div>
                     </div>
-                </div>
-                <hr class="clear">
-                <div class="pagination">
-                    <ul>
-                        <li class="active"><a href="#">1</a></li>
-                        <li><a href="#">2</a></li>
-                        <li class="next"><a href="#"><i class="fa fa-caret-right"
-                                    aria-hidden="true"></i></a></li>
-                    </ul>
+                    <hr class="clear">
+                    <div class="pagination">
+                        <ul>
+                            <li class="active"><a href="#">1</a></li>
+                            <li><a href="#">2</a></li>
+                            <li class="next"><a href="#"><i class="fa fa-caret-right"
+                                        aria-hidden="true"></i></a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
 
-</div>
+    </div>

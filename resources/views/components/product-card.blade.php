@@ -29,27 +29,34 @@
 
     <!-- Start product button -->
     @if ($items->qty > 0)
-    <!-- <div class="variants add">
-            <button class="btn btn-add-to-cart"
-                data-id="{{ $items->id }}" data-qty="1">
-                Add to Cart
-            </button>
-        </div>
-        <div class="button-set">
-            <div class="wishlist-btn">
-                <a class="wishlist add-to-wishlist"
-                    href="">
-                    <i class="icon anm anm-heart-l"></i>
-                </a>
-            </div>
-        </div> -->
-
+    @if($items->has_variants)
     <div class="variants add">
+        <a href="{{ route('product', $items->slug) }}" class="btn"
+            style="letter-spacing: 0;">Select Options</a>
+    </div>
+    @else
+    <div class="variants add">
+        <button class="btn btn-add-to-cart"
+            data-id="{{ $items->id }}" data-qty="1">
+            Add to Cart
+        </button>
+    </div>
+    <div class="button-set">
+        <div class="wishlist-btn">
+            <a class="wishlist add-to-wishlist"
+                href="">
+                <i class="icon anm anm-heart-l"></i>
+            </a>
+        </div>
+    </div>
+    @endif
+
+    <!-- <div class="variants add">
         <a href="{{ url('/order-whatsapp/'.$items->id) }}"
             class="btn btn-success">
             Order on WhatsApp
         </a>
-    </div>
+    </div> -->
     @else
     <div class="variants add">
         <button class="btn btn-add-to-cart">

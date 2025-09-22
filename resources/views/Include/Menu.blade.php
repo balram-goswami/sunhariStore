@@ -1,3 +1,9 @@
+@php
+$showTotal = Cart::instance('shopping')->total();
+$cart = Cart::instance('shopping')->content();
+$count = Cart::instance('shopping')->count();
+@endphp
+
 <div class="top-header">
     <div class="container-fluid">
         <div class="row">
@@ -109,12 +115,12 @@
                     <div class="site-cart">
                         <a href="#;" class="site-header__cart" title="Cart">
                             <i class="icon anm anm-bag-l"></i>
-                            <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">2</span>
+                            <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">{{ $count }}</span>
                         </a>
                         <!--Minicart Popup-->
                         <div id="header-cart" class="block block-cart">
                             <ul class="mini-products-list">
-
+                                @foreach($cart as $cartItems)
                                 <li class="item">
                                     <a class="product-image" href="#">
                                         <img src="themeAssets/images/product-images/cape-dress-1.jpg"
@@ -125,8 +131,8 @@
                                                 aria-hidden="true"></i></a>
                                         <a href="#" class="edit-i remove"><i class="anm anm-edit"
                                                 aria-hidden="true"></i></a>
-                                        <a class="pName" href="cart.html">Sleeve Kimono Dress</a>
-                                        <div class="variant-cart">Black / XL</div>
+                                        <a class="pName" href="cart.html">{{ $cartItems->name }}</a>
+                                        <div class="variant-cart">{{ $cartItems->sku }}</div>
                                         <div class="wrapQtyBtn">
                                             <div class="qtyField">
                                                 <span class="label">Qty:</span>
@@ -140,20 +146,21 @@
                                         </div>
                                         <div class="priceRow">
                                             <div class="product-price">
-                                                <span class="money">$59.00</span>
+                                                <span class="money">Rs {{$cartItems->price}}</span>
                                             </div>
                                         </div>
                                     </div>
                                 </li>
+                                @endforeach
 
                             </ul>
                             <div class="total">
                                 <div class="total-in">
                                     <span class="label">Cart Subtotal:</span><span class="product-price"><span
-                                            class="money">748.00</span></span>
+                                            class="money">Rs {{ $showTotal ?? 0 }}</span></span>
                                 </div>
                                 <div class="buttonSet text-center">
-                                    <a href="{{ route('cart.index') }}" class="btn btn-secondary btn--small">View Cart</a>
+                                    <a href="{{ route('cart') }}" class="btn btn-secondary btn--small">View Cart</a>
                                     <a href="{{ route('cart.checkout') }}" class="btn btn-secondary btn--small">Checkout</a>
                                 </div>
                             </div>
@@ -178,6 +185,9 @@
             </li>
 
             <ul class="customer-links list-inline">
+                <li><a href="{{ route('contact-us') }}">Contact Us</a></li>
+                <li><a href="{{ route('about-us') }}">About Us</a></li>
+                <li><a href="{{ route('products') }}">Shop</a></li>
                 @auth
                 @if(auth()->user()->isAdmin())
                 <li><a href="{{ url('/admin/admin-dashboard') }}">Admin Dashboard</a></li>

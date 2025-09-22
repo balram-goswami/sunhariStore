@@ -4,132 +4,148 @@ namespace App\Http\Controllers\Front;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Validator, Session;
 use App\Models\{
     Product,
-    ProductVariation,
-    SubVariation,
-    Cart
+    CustomerAddress
 };
-use Validator, DateTime, Config, Helpers, Hash, DB, Session, Auth, Redirect;
-
+use Illuminate\Support\Facades\View;
+use Illuminate\Support\Facades\Auth;
+use App\Services\Cart\CartService;
+use Cart;
 
 class CartController extends Controller
 {
-    
-
-    public function index()
+    protected $cartService;
+    public function __construct(CartService $cartService)
     {
-        $breadcrumbs = [
-            'title' => 'Cart',
-            'metaTitle' => 'Cart',
-            'metaDescription' => 'Cart',
-            'metaKeyword' => 'Cart',
-            'links' => [
-                ['url' => url('/'), 'title' => 'Home']
-            ]
-        ];
-        
-        $view = 'Templates.Cart';
-        return view('Front', compact('view', 'breadcrumbs'));
+        $this->cartService = $cartService;
+    }
+
+    public function cart()
+    {
+        $cartItems  = Cart::instance('shopping')->content();
+        $subtotal   = Cart::instance('shopping')->subtotal();
+        $total      = Cart::instance('shopping')->total();
+        $count      = Cart::instance('shopping')->count();
+
+        return view('Front', [
+            'view'      => "Templates.Cart",
+            'cartItems' => $cartItems,
+            'subtotal'  => $subtotal,
+            'total'     => $total,
+            'count'     => $count,
+        ]);
+    }
+
+    public function cartHeader()
+    {
+        $cart = $this->cartService->cartSummary();
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Cart summary fetched successfully.',
+            'data' => $cart,
+        ]);
     }
 
     public function addToCart(Request $request)
     {
-        $product = Product::findOrFail($request->product_id);
-        $variation = $request->variation_id ? ProductVariation::findOrFail($request->variation_id) : null;
-
-        if (Auth::check()) {
-            $user = getCurrentUser();
-            $visitor = null;
-        } else {
-            $user = null;
-            $visitor = getCurrentVisitor();
+        try {
+            $cart = $this->cartService->addProduct($request);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
 
-        $query = Cart::where('post_id', $product->id)
-            ->when($variation, fn($q) => $q->where('variation_id', $variation->id));
-
-        if ($user) {
-            $query->where('user_id', $user->user_id);
-        } elseif ($visitor) {
-            $query->where('visitor_id', $visitor->id);
-        }
-
-        $existingCart = $query->first();
-
-        if ($existingCart) {
-            $existingCart->quantity += $request->quantity;
-            $existingCart->save();
-        } else {
-            $saveCart = new Cart();
-            $saveCart->user_id      = $user ? $user->user_id : null;
-            $saveCart->visitor_id   = $visitor ? $visitor->id : null;
-            $saveCart->post_id      = $product->id;
-            $saveCart->quantity     = $request->quantity;
-            $saveCart->save();
-        }
-
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Product added to cart',
-                'cart_count' => Cart::when($user, fn($q) => $q->where('user_id', $user->id))
-                    ->when($visitor, fn($q) => $q->where('visitor_id', $visitor->id))
-                    ->count()
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Product added to cart');
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Product added to cart successfully.',
+            'data' => $cart,
+        ]);
     }
 
-    public function removeFromCart($itemId, Request $request)
+    public function updateQuantity(Request $request)
     {
-        $cart = Session::get('cart', []);
-
-
-        if ($request->ajax()) {
-            return response()->json([
-                'status' => 'success',
-                'message' => 'Product removed from cart',
-                'cart_count' => count($cart),
-                'cart' => $cart
-            ]);
+        try {
+            $cart = $this->cartService->updateProduct($request);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
 
-        return redirect()->back()->with('success', 'Product removed from cart');
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Product updated in cart successfully.',
+            'data' => $cart,
+        ]);
     }
 
-    public function updateCart(Request $request)
+    public function removeItem(Request $request)
     {
-        $cart = Session::get('cart', []);
-        if ($request->cartItems) {
-            foreach ($request->cartItems as $itemId => $quantity) {
-                if (isset($cart[$itemId])) {
-                    $cart[$itemId]['quantity'] = $quantity;
-                }
-            }
+        try {
+            $cart = $this->cartService->removeProduct($request);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()]);
         }
-        Session::put('cart', $cart);
 
-        Session::flash('success', 'Cart updated');
-        return redirect()->back();
+        return response()->json([
+            'success'   => true,
+            'message'   => 'Product updated in cart successfully.',
+            'data' => $cart,
+        ]);
     }
-
 
 
     public function checkout()
     {
-        $breadcrumbs = [
-            'title' => 'Checkout',
-            'metaTitle' => 'Checkout',
-            'metaDescription' => 'Checkout',
-            'metaKeyword' => 'Checkout',
-            'links' => [
-                ['url' => url('/'), 'title' => 'Home']
+        $cartItems  = Cart::instance('shopping')->content();
+        $subtotal   = Cart::instance('shopping')->subtotal();
+        $total      = Cart::instance('shopping')->total();
+
+        $view = "Templates.Checkout";
+
+        return view('Front', compact('view', 'cartItems', 'subtotal', 'total'));
+    }
+
+
+
+    public function applyCoupon(Request $request)
+    {
+        $couponCode = $request->input('code');
+        $coupon = ProductCoupon::where('code', $couponCode)->first();
+
+        $customerId = Auth::guard('customer')->id();
+        $cartItems = Cart::instance('shopping')->content();
+        $subtotal = (float) $cartItems->sum('sub_total');
+
+        // ADD LOGGING HERE to debug values
+        \Log::info('Coupon Validation Debug', [
+            'subtotal'          => $subtotal,
+            'coupon_code'       => $couponCode,
+            'expire'            => $coupon?->expire,
+            'minimum_amount'    => $coupon?->minimum_amount,
+            'maximum_amount'    => $coupon?->maximum_amount,
+            'now' => now(),
+        ]);
+
+        if (!$coupon || !$coupon->isValid($subtotal)) {
+            return response()->json(['success' => false, 'message' => 'Coupon is not valid for this cart total.']);
+        }
+
+        $discount = $coupon->calculateDiscount($subtotal);
+        $total = $subtotal - $discount;
+
+        session([
+            'coupon'                => $couponCode,
+            'discount'              => $discount,
+            'total_after_discount'  => $total,
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'totals' => [
+                'subtotal'  => number_format($subtotal, 2),
+                'discount'  => number_format($discount, 2),
+                'total'     => number_format($total, 2),
             ]
-        ];
-        $view = 'Templates.Checkout';
-        $countries = $this->commonService->getCountry();
-        return view('Front', compact('view', 'breadcrumbs', 'countries'));
+        ]);
     }
 }
