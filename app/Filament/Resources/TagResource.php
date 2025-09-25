@@ -49,14 +49,6 @@ class TagResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                Tables\Columns\TextColumn::make('header_code')
-                    ->label('Header Code')
-                    ->limit(50),
-
-                Tables\Columns\TextColumn::make('footer_code')
-                    ->label('Footer Code')
-                    ->limit(50),
-
                 Tables\Columns\ToggleColumn::make('is_active')
                     ->label('Active')
                     ->sortable(),

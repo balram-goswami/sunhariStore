@@ -18,11 +18,11 @@ class VendorDashboard extends Page
     protected static ?string $navigationIcon = 'heroicon-o-home';
     protected static string $view = 'filament.pages.vendor-dashboard';
 
-    protected static ?string $navigationGroup = null;
     protected static ?string $slug = 'dashboard';
+    protected static ?string $navigationLabel = 'Manager Dashboard';
     protected static ?string $routeName = 'filament.pages.vendor-dashboard';
 
-    
+
     public static function shouldRegisterNavigation(): bool
     {
         $user = Auth::user();

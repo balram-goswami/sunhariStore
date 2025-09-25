@@ -21,6 +21,7 @@ use Filament\Forms\Components\Section;
 class SiteSettingResource extends Resource
 {
     protected static ?string $model = SiteSetting::class;
+    protected static ?string $navigationGroup = 'Content Management';
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
