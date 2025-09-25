@@ -19,10 +19,16 @@ $data = siteSetting();
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
     @include('Include.Style')
+    @foreach(\App\Models\Tag::whereNotNull('header_code')->where('is_active', true)->get() as $tag)
+    {!! $tag->header_code !!}
+    @endforeach
 
 </head>
 
 <body class="template-index belle template-index-belle">
+    @foreach(\App\Models\Tag::whereNotNull('footer_code')->where('is_active', true)->get() as $tag)
+    {!! $tag->footer_code !!}
+    @endforeach
     <!-- <div id="pre-loader">
         <img src="themeAssets/images/loader.gif" alt="Loading..." />
     </div> -->

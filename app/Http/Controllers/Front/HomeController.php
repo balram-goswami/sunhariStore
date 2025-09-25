@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use GuzzleHttp\Client;
-use App\Models\{Product, SiteSetting};
+use App\Models\{Product, SiteSetting, Slider};
 
 
 use Illuminate\Support\Facades\Http;
@@ -19,6 +19,7 @@ class HomeController extends Controller
   {
     $view = "Templates.Home";
     $products = Product::where('status', 2)->orderBy('id', 'desc')->limit(4)->get();
+    $slider = Slider::where('status', 1)->get(); 
 
     $data = siteSetting();
     $breadcrumbs = [
@@ -31,7 +32,7 @@ class HomeController extends Controller
       ]
     ];
 
-    return view('Front', compact('view', 'products', 'breadcrumbs'));
+    return view('Front', compact('view', 'products', 'breadcrumbs', 'slider'));
   }
 
   public function profile()

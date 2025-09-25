@@ -62,7 +62,10 @@
 
             <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
                 <div class="category-description">
-                    <h3>✨ Step into timeless elegance with our designer lehenga collection. Crafted from luxurious fabrics, adorned with intricate embroidery, and designed to flatter every silhouette, each piece brings a blend of tradition and modern charm. Perfect for weddings, festivities, or grand celebrations – make every occasion unforgettable with your dream lehenga.</h3>
+                    <p><center>✨ Step into timeless elegance with our designer lehenga collection. Crafted from luxurious fabrics, 
+                        adorned with intricate embroidery, and designed to flatter every silhouette, 
+                        each piece brings a blend of tradition and modern charm. Perfect for weddings, festivities, 
+                        or grand celebrations – make every occasion unforgettable with your dream lehenga.</center></p>
                 </div>
                 <hr>
                 <div class="productList">
@@ -126,7 +129,7 @@
                             <div class="product-list row" data-page="{{ $products->currentPage() }}" data-last-page="{{ $products->lastPage() }}" data-total-pages="{{ $products->total() }}" data-to="{{ $products->count() }}">
 
                                 @foreach ($products as $items)
-                                <div class="col-4 item">
+                                <div class="col-6 col-lg-4 item">
                                     @include('components.product-card', ['items' => $items])
                                     @endforeach
                                 </div>

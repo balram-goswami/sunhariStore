@@ -1,6 +1,32 @@
 <div id="page-content">
     <div class="slideshow slideshow-wrapper pb-section sliderFull">
         <div class="home-slideshow">
+            @if($slider->isNotEmpty())
+            @foreach($slider as $slide)
+            <div class="slide">
+                <div class="blur-up lazyload bg-size">
+                    <img class="blur-up lazyload bg-img"
+                        data-src="{{ asset('storage/' . $slide->image ?? 'themeAssets/demo/10.jpg') }}"
+                        src="{{ asset('storage/' . $slide->image ?? 'themeAssets/demo/10.jpg') }}"
+                        alt="{{ $slide->title }}"
+                        title="{{ $slide->title }}" />
+
+                    <div class="slideshow__text-wrap slideshow__overlay classic bottom">
+                        <div class="slideshow__text-content bottom">
+                            <div class="wrap-caption center">
+                                <h2 class="h1 mega-title slideshow__title">{{ $slide->title }}</h2>
+                                <span class="mega-subtitle slideshow__subtitle">{{ $slide->text }}</span>
+                                @if($slide->button_text && $slide->button_link)
+                                <a href="{{ $slide->button_link }}" class="btn">{{ $slide->button_text }}</a>
+                                @endif
+                            </div>
+                        </div>
+                    </div>  
+                </div>
+            </div>
+            @endforeach
+
+            @else
             <div class="slide">
                 <div class="blur-up lazyload bg-size">
                     <img class="blur-up lazyload bg-img" data-src="{{ publicPath('themeAssets/demo/10.jpg') }}"
@@ -18,23 +44,7 @@
                     </div>
                 </div>
             </div>
-            <div class="slide">
-                <div class="blur-up lazyload bg-size">
-                    <img class="blur-up lazyload bg-img" data-src="{{ publicPath('themeAssets/demo/11.jpg') }}"
-                        src="{{ publicPath('themeAssets/demo/11.jpg') }}" alt="Summer Bikini Collection"
-                        title="Summer Langha Collection" />
-                    <div class="slideshow__text-wrap slideshow__overlay classic bottom">
-                        <div class="slideshow__text-content bottom">
-                            <div class="wrap-caption center">
-                                <h2 class="h1 mega-title slideshow__title">Summer Langha Collection</h2>
-                                <span class="mega-subtitle slideshow__subtitle">Save up to 50% off this weekend
-                                    only</span>
-                                <span class="btn">Shop now</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endif
         </div>
     </div>
 
@@ -51,7 +61,7 @@
                             <div class="tab_content grid-products">
                                 <div class="productSlider">
 
-                                    @foreach ($products as $items)
+                                    @foreach ($products->take(6) as $items)
                                     <div class="col-12 item">
                                         @include('components.product-card' , compact('items'))
                                         @endforeach

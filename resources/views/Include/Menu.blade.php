@@ -32,7 +32,7 @@ $count = Cart::instance('shopping')->count();
             </div>
             <div class="col-sm-4 col-md-4 col-lg-4 d-none d-lg-none d-md-block d-lg-block">
                 <div class="text-center">
-                    <p class="top-header_middle-text"> Worldwide Express Shipping</p>
+                    <p class="top-header_middle-text"> All India Delivery Available </p>
                 </div>
             </div>
             <div class="col-2 col-sm-4 col-md-3 col-lg-4 text-right">
@@ -178,13 +178,9 @@ $count = Cart::instance('shopping')->count();
     <div class="mobile-nav-wrapper" role="navigation">
         <div class="closemobileMenu"><i class="icon anm anm-times-l pull-right"></i> Close Menu</div>
         <ul id="MobileNav" class="mobile-nav">
-            <li class="lvl1 parent megamenu"><a href="{{ route('homePage') }}">Home<i class="anm anm-plus-l"></i></a>
-            </li>
-            <li class="lvl1 parent megamenu">
-                <a href="">Sub Menu <i class="anm anm-plus-l"></i></a>
-            </li>
 
             <ul class="customer-links list-inline">
+                <li><a href="{{ route('homePage') }}">Home</a></li>
                 <li><a href="{{ route('contuct-us') }}">Contact Us</a></li>
                 <li><a href="{{ route('about-us') }}">About Us</a></li>
                 <li><a href="{{ route('products') }}">Shop</a></li>
