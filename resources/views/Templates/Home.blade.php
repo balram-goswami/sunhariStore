@@ -146,8 +146,7 @@
                 <div class="grid-products">
                     <div class="row">
 
-                        @foreach ($products as $items)
-
+                        @foreach ($products->take(6) as $items)
 
                         <div class="col-6 col-sm-6 col-md-4 col-lg-4 item grid-view-item style2">
                             <div class="grid-view_image">
