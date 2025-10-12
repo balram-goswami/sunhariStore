@@ -18,7 +18,7 @@ class HomeController extends Controller
   public function homePage()
   {
     $view = "Templates.Home";
-    $products = Product::where('status', 2)->orderBy('id', 'desc')->limit(4)->get();
+    $products = Product::where('status', 2)->orderBy('id', 'desc')->get();
     $slider = Slider::where('status', 1)->get(); 
 
     $data = siteSetting();
@@ -74,6 +74,38 @@ class HomeController extends Controller
   public function aboutUs()
   {
     $view = "Templates.AboutUs";
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
+
+    return view('Front', compact('view', 'breadcrumbs'));
+  }
+
+  public function terms()
+  {
+    $view = "Templates.Terms";
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Sunhari',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
+
+    return view('Front', compact('view', 'breadcrumbs'));
+  }
+
+  public function returnRefund()
+  {
+    $view = "Templates.Return-refund";
     $breadcrumbs = [
       'title' => $data->meta_title ?? 'Sunhari',
       'metaTitle' => $data->meta_title ?? 'Sunhari',

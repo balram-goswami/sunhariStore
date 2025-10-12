@@ -13,7 +13,8 @@ use App\Http\Controllers\Front\{
     WishlistController,
     PaymentController,
     ShopController,
-    OrderController
+    OrderController,
+    GoogleSheetExportController 
 };
 
 // Home & Static Pages
@@ -44,6 +45,9 @@ Route::post('/cart/header', [CartController::class, 'cartHeader'])->name('cart.h
 // WishList 
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+
+Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
+Route::get('/return-refund', [HomeController::class, 'returnRefund'])->name('return.refund');
 
 // --------------------
 // Authenticated & Verified User Routes
@@ -104,7 +108,7 @@ Route::get('/dashboard', function () {
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
-
+    Route::get('/export-products', [GoogleSheetExportController::class, 'export']);
     Route::get('profile', [HomeController::class, 'profile'])->name('profile');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
