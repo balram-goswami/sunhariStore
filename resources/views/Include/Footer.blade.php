@@ -109,6 +109,8 @@ $data = siteSetting();
                             <li><a href="{{ route('contuct-us') }}">Contact Us</a></li>
                             <li><a href="{{ route('about-us') }}">About Us</a></li>
                             <li><a href="{{ route('products') }}">Shop</a></li>
+                            <li><a href="{{ route('terms') }}">T&C</a></li>
+                            <li><a href="{{ route('return.refund') }}">Return/Refund</a></li>
                             @auth
                             @if(auth()->user()->isAdmin())
                             <li><a href="{{ url('/admin/admin-dashboard') }}">Admin Dashboard</a></li>
