@@ -1,7 +1,7 @@
 @php
 $data = siteSetting();
 @endphp
-
+@include('Model.ChatBot')
 <footer id="footer">
     <div class="newsletter-section">
         <div class="container">
@@ -148,8 +148,6 @@ $data = siteSetting();
                             @endforeach
                         </ul>
                     </div>
-
-
                     <div class="footer-facebook">
                         <div id="fb-root"></div>
                         <script async defer crossorigin="anonymous"
@@ -169,8 +167,6 @@ $data = siteSetting();
                             </blockquote>
                         </div>
                     </div>
-
-
                 </div>
             </div>
 

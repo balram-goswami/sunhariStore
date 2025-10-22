@@ -14,7 +14,8 @@ use App\Http\Controllers\Front\{
     PaymentController,
     ShopController,
     OrderController,
-    GoogleSheetExportController 
+    GoogleSheetExportController,
+    FormController
 };
 
 // Home & Static Pages
@@ -63,6 +64,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Order WhatsApp
 Route::get('/order-whatsapp/{order}', [ShopController::class, 'orderOnWhatsapp']);
+Route::post('/chatbot/store', [FormController::class, 'store'])->name('chatbot.store');
+
 
 // --------------------
 // Email Verification Routes

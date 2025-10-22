@@ -38,13 +38,7 @@ class Product extends Model
         'status'        => ProductStatus::class
     ];
 
-    // protected function sku(): Attribute
-    // {
-    //     return Attribute::make(
-    //         get: fn ($value) => 0,  
-    //         set: fn ($value) => 0,
-    //     );
-    // }
+   
 
     public function variants()
     {

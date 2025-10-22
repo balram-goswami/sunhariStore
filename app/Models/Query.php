@@ -15,6 +15,6 @@ class Query extends Model
         'name',
         'email',
         'message',
-        'domain_id'
+        'number'
     ];
 }
