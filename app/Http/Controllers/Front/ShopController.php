@@ -129,9 +129,9 @@ class ShopController extends Controller
             'metaDescription' => $product->seo_desc ?? 'Sunhari -  Where Tradition Shines',
             'metaKeyword' => $product->seo_keywords ?? '',
         ];
-        $allproduct = Product::where('status', 2)->get();
+        $products = Product::where('status', 2)->get();
         $view = 'Templates.ShopSingle';
-        return view('Front', compact('view', 'product', 'relatedProduct', 'variants', 'categories', 'allproduct', 'breadcrumbs'));
+        return view('Front', compact('view', 'product', 'relatedProduct', 'variants', 'categories', 'products', 'breadcrumbs'));
     }
 
     public function reviewPost(Request $request)

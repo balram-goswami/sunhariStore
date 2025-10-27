@@ -205,14 +205,14 @@ class ProductResource extends Resource
                     ->sortable()
                     ->searchable(),
 
-                \Filament\Tables\Columns\TextColumn::make('brand.name')->label('Fabric')
-                    ->searchable(),
+                // \Filament\Tables\Columns\TextColumn::make('brand.name')->label('Fabric')
+                //     ->searchable(),
 
-                \Filament\Tables\Columns\TextColumn::make('category_names')
-                    ->label('Category')
-                    ->badge()
-                    ->separator(', ')
-                    ->getStateUsing(fn($record) => $record->category_names),
+                // \Filament\Tables\Columns\TextColumn::make('category_names')
+                //     ->label('Category')
+                //     ->badge()
+                //     ->separator(', ')
+                //     ->getStateUsing(fn($record) => $record->category_names),
 
                 \Filament\Tables\Columns\TextInputColumn::make('qty')
                     ->label('Stock')
@@ -225,21 +225,21 @@ class ProductResource extends Resource
                     ->sortable(),
 
 
-                \Filament\Tables\Columns\TextColumn::make('variants_count')
-                    ->counts('variants')
-                    ->label('Variants')
-                    ->sortable(),
+                // \Filament\Tables\Columns\TextColumn::make('variants_count')
+                //     ->counts('variants')
+                //     ->label('Variants')
+                //     ->sortable(),
 
-                \Filament\Tables\Columns\SelectColumn::make('featured')
-                    ->label('Featured')
-                    ->options(
-                        collect(\App\Models\Enums\ProductFeaturedStatus::cases())
-                            ->mapWithKeys(fn(\App\Models\Enums\ProductFeaturedStatus $featured) => [
-                                $featured->value => $featured->label()
-                            ])
-                            ->toArray()
-                    )
-                    ->sortable(),
+                // \Filament\Tables\Columns\SelectColumn::make('featured')
+                //     ->label('Featured')
+                //     ->options(
+                //         collect(\App\Models\Enums\ProductFeaturedStatus::cases())
+                //             ->mapWithKeys(fn(\App\Models\Enums\ProductFeaturedStatus $featured) => [
+                //                 $featured->value => $featured->label()
+                //             ])
+                //             ->toArray()
+                //     )
+                //     ->sortable(),
 
                 \Filament\Tables\Columns\SelectColumn::make('status')
                     ->label('Status')
