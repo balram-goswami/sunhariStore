@@ -176,27 +176,18 @@ class ShopController extends Controller
                 ? $product->sale_price
                 : $product->price;
 
-            // Friendly message
-            $message = "✨ *New Order Alert!* ✨\n\n"
+            // Product link
+            $productLink = route('product', $product->slug);
+
+            // Create WhatsApp message
+            $message = "🌸 *New Order Request* 🌸\n\n"
                 . "🛍 *Product:* {$product->name}\n"
-                . "🛍 *Product SKU:* {$product->sku}\n"
-                . "🔢 *Quantity:* 1\n"
-                . "💰 *Price:* ₹{$price}\n";
+                . "💰 *Price:* ₹{$price}\n"
+                . "🔢 *SKU:* {$product->sku}\n"
+                . "🔗 *View Product:* {$productLink}\n\n"
+                . "I want to inquire for ({$product->name}). Please guide me how to buy it 🙏";
 
-            // Image handle
-            $images = $product->image;
-            if (is_string($images)) {
-                $images = json_decode($images, true);
-            }
-
-            if (!empty($images) && is_array($images)) {
-                $firstImage = asset('storage/' . ltrim($images[0], '/'));
-                $message .= "\n🖼 *Product Image:* {$firstImage}\n";
-            }
-
-            $message .= "Confirm this Order by clicking on link \nThank you! 🙏";
-
-            // WhatsApp link
+            // Generate WhatsApp link
             $link = "https://wa.me/918866202050?text=" . urlencode($message);
 
             return redirect()->away($link);

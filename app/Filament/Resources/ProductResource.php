@@ -193,144 +193,135 @@ class ProductResource extends Resource
     }
 
     public static function table(Table $table): Table
-    {
-        return $table
-            ->columns([
-                \Filament\Tables\Columns\ImageColumn::make('image')
-                    ->label('Image')
-                    ->disk('public')
-                    ->size(50),
+{
+    return $table
+        ->columns([
+            \Filament\Tables\Columns\ImageColumn::make('image')
+                ->label('Image')
+                ->disk('public')
+                ->size(50),
 
-                \Filament\Tables\Columns\TextColumn::make('name')
-                    ->sortable()
-                    ->searchable(),
+            \Filament\Tables\Columns\TextColumn::make('name')
+                ->sortable()
+                ->searchable(),
 
-                // \Filament\Tables\Columns\TextColumn::make('brand.name')->label('Fabric')
-                //     ->searchable(),
+            \Filament\Tables\Columns\TextInputColumn::make('qty')
+                ->label('Stock')
+                ->type('number')
+                ->extraInputAttributes([
+                    'min'  => 0,
+                    'step' => '1',
+                ])
+                ->rules(['integer', 'min:0'])
+                ->sortable(),
 
-                // \Filament\Tables\Columns\TextColumn::make('category_names')
-                //     ->label('Category')
-                //     ->badge()
-                //     ->separator(', ')
-                //     ->getStateUsing(fn($record) => $record->category_names),
+            // 💰 Regular Price
+            \Filament\Tables\Columns\TextInputColumn::make('price')
+                ->label('Regular Price')
+                ->type('number')
+                ->rules(['numeric', 'min:0'])
+                ->extraInputAttributes([
+                    'min'  => 0,
+                    'step' => '0.01',
+                ])
+                ->sortable(),
 
-                \Filament\Tables\Columns\TextInputColumn::make('qty')
-                    ->label('Stock')
-                    ->type('number')
-                    ->extraInputAttributes([
-                        'min'  => 0,
-                        'step' => '1',
+            // 🏷️ Sale Price
+            \Filament\Tables\Columns\TextInputColumn::make('sale_price')
+                ->label('Sale Price')
+                ->type('number')
+                ->rules(['numeric', 'min:0'])
+                ->extraInputAttributes([
+                    'min'  => 0,
+                    'step' => '0.01',
+                ])
+                ->sortable(),
+
+            \Filament\Tables\Columns\SelectColumn::make('status')
+                ->label('Status')
+                ->options(
+                    collect(\App\Models\Enums\ProductStatus::cases())
+                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                        ->toArray()
+                )
+                ->sortable(),
+        ])
+
+        ->filters([
+            \Filament\Tables\Filters\SelectFilter::make('status')
+                ->options(
+                    collect(\App\Models\Enums\ProductStatus::cases())
+                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                        ->toArray()
+                ),
+
+            \Filament\Tables\Filters\SelectFilter::make('featured')
+                ->options(
+                    collect(\App\Models\Enums\ProductFeaturedStatus::cases())
+                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                        ->toArray()
+                ),
+
+            \Filament\Tables\Filters\SelectFilter::make('category')
+                ->label('Category')
+                ->options(\App\Models\ProductCategory::pluck('name', 'id'))
+                ->query(function ($query, array $data) {
+                    if (!empty($data['value'])) {
+                        $query->whereJsonContains('category_id', [(string) $data['value']]);
+                    }
+                }),
+        ])
+
+        ->actions([
+            Tables\Actions\EditAction::make(),
+            Tables\Actions\DeleteAction::make(),
+        ])
+
+        ->bulkActions([
+            Tables\Actions\BulkActionGroup::make([
+                Tables\Actions\DeleteBulkAction::make(),
+
+                Tables\Actions\BulkAction::make('updateStatus')
+                    ->label('Update Status')
+                    ->icon('heroicon-o-check-badge')
+                    ->form([
+                        \Filament\Forms\Components\Select::make('status')
+                            ->label('Status')
+                            ->options(
+                                collect(\App\Models\Enums\ProductStatus::cases())
+                                    ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                                    ->toArray()
+                            )
+                            ->required(),
                     ])
-                    ->rules(['integer', 'min:0'])
-                    ->sortable(),
-
-
-                // \Filament\Tables\Columns\TextColumn::make('variants_count')
-                //     ->counts('variants')
-                //     ->label('Variants')
-                //     ->sortable(),
-
-                // \Filament\Tables\Columns\SelectColumn::make('featured')
-                //     ->label('Featured')
-                //     ->options(
-                //         collect(\App\Models\Enums\ProductFeaturedStatus::cases())
-                //             ->mapWithKeys(fn(\App\Models\Enums\ProductFeaturedStatus $featured) => [
-                //                 $featured->value => $featured->label()
-                //             ])
-                //             ->toArray()
-                //     )
-                //     ->sortable(),
-
-                \Filament\Tables\Columns\SelectColumn::make('status')
-                    ->label('Status')
-                    ->options(
-                        collect(ProductStatus::cases())
-                            ->mapWithKeys(fn(ProductStatus $status) => [$status->value => $status->label()])
-                            ->toArray()
-                    )
-                    ->sortable(),
-            ])
-
-            ->filters([
-                SelectFilter::make('status')
-                    ->options(
-                        collect(ProductStatus::cases())
-                            ->mapWithKeys(fn(ProductStatus $status) => [$status->value => $status->label()])
-                            ->toArray()
-                    ),
-
-                SelectFilter::make('featured')
-                    ->options(
-                        collect(ProductFeaturedStatus::cases())
-                            ->mapWithKeys(fn(ProductFeaturedStatus $status) => [$status->value => $status->label()])
-                            ->toArray()
-                    ),
-
-                SelectFilter::make('category')
-                    ->label('Category')
-                    ->options(\App\Models\ProductCategory::pluck('name', 'id'))
-                    ->query(function ($query, array $data) {
-                        if (!empty($data['value'])) {
-                            $query->whereJsonContains('category_id', [(string) $data['value']]);
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            $record->update(['status' => $data['status']]);
                         }
                     }),
-            ])
-            ->actions([
-                Tables\Actions\EditAction::make(),
-                Tables\Actions\DeleteAction::make(),
-            ])
-            ->bulkActions([
-                Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
 
-                    Tables\Actions\BulkAction::make('updateStatus')
-                        ->label('Update Status')
-                        ->icon('heroicon-o-check-badge')
-                        ->form([
-                            \Filament\Forms\Components\Select::make('status')
-                                ->label('Status')
-                                ->options(
-                                    collect(\App\Models\Enums\ProductStatus::cases())
-                                        ->mapWithKeys(fn(\App\Models\Enums\ProductStatus $status) => [
-                                            $status->value => $status->label()
-                                        ])
-                                        ->toArray()
-                                )
-                                ->required(),
-                        ])
-                        ->action(function (array $data, $records) {
-                            foreach ($records as $record) {
-                                $record->update([
-                                    'status' => $data['status'],
-                                ]);
-                            }
-                        }),
+                Tables\Actions\BulkAction::make('updateFeatured')
+                    ->label('Update Featured')
+                    ->icon('heroicon-o-star')
+                    ->form([
+                        \Filament\Forms\Components\Select::make('featured')
+                            ->label('Featured')
+                            ->options(
+                                collect(\App\Models\Enums\ProductFeaturedStatus::cases())
+                                    ->mapWithKeys(fn($featured) => [$featured->value => $featured->label()])
+                                    ->toArray()
+                            )
+                            ->required(),
+                    ])
+                    ->action(function (array $data, $records) {
+                        foreach ($records as $record) {
+                            $record->update(['featured' => $data['featured']]);
+                        }
+                    }),
+            ]),
+        ]);
+}
 
-                    Tables\Actions\BulkAction::make('updateFeatured')
-                        ->label('Update Featured')
-                        ->icon('heroicon-o-star')
-                        ->form([
-                            \Filament\Forms\Components\Select::make('featured')
-                                ->label('Featured')
-                                ->options(
-                                    collect(\App\Models\Enums\ProductFeaturedStatus::cases())
-                                        ->mapWithKeys(fn(\App\Models\Enums\ProductFeaturedStatus $featured) => [
-                                            $featured->value => $featured->label()
-                                        ])
-                                        ->toArray()
-                                )
-                                ->required(),
-                        ])
-                        ->action(function (array $data, $records) {
-                            foreach ($records as $record) {
-                                $record->update([
-                                    'featured' => $data['featured'],
-                                ]);
-                            }
-                        }),
-                ]),
-            ]);
-    }
 
     public static function getRelations(): array
     {
