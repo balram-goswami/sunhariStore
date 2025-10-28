@@ -1,161 +1,160 @@
 <div id="page-content">
     <!--Collection Banner-->
-    <div class="collection-header" style="margin-bottom: 30px;">
+    <div class="collection-header">
         <div class="collection-hero">
-            <div class="collection-hero__image"><img class="blur-up lazyload"
-                    data-src="{{ publicPath('themeAssets//images/cat-women2.jpg') }}"
-                    src="{{ publicPath('themeAssets//images/cat-women2.jpg') }}" alt="Women" title="Women" /></div>
+            <div class="collection-hero__image">
+                <img class="blur-up lazyload" data-src="{{ publicPath('themeAssets/images/cat-women.jpg') }}"
+                    src="{{ publicPath('themeAssets/images/cat-women.jpg') }}" alt="Women" title="Women" />
+            </div>
             <div class="collection-hero__title-wrapper">
-                <h1 class="collection-hero__title page-width">Shop</h1>
+                <h1 class="collection-hero__title page-width">Products</h1>
             </div>
         </div>
     </div>
     <!--End Collection Banner-->
-
+<br>
     <div class="container">
         <div class="row">
-            <!--Sidebar-->
-            <div class="col-12 col-sm-12 col-md-3 col-lg-3 sidebar filterbar">
-                <div class="closeFilter d-block d-md-none d-lg-none"><i class="icon icon anm anm-times-l"></i></div>
-                <div class="sidebar_tags">
-                    <!--Categories-->
-                    <div class="sidebar_widget categories filter-widget">
-                        <div class="widget-title">
-                            <h2>Categories</h2>
-                        </div>
-                        <div class="widget-content">
-                            <ul class="sidebar_categories">
-                                <li class="">
-                                    <ul>
-                                        @foreach ($categories as $cat)
-                                        <label>
-                                            <input type="checkbox" class="filter-category"
-                                                value="{{ $cat->id }}">
-                                            {{ $cat->name }}
-                                        </label>
-                                        @endforeach
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                        <div class="sidebar_widget categories filter-widget">
-                            <div class="widget-title">
-                                <h2>Fabric</h2>
-                            </div>
-                            <li class="">
-                                <ul class="sublinks">
-                                    @foreach ($brands as $brand)
-                                    <li>
-                                        <label>
-                                            <input type="checkbox" class="filter-brand"
-                                                value="{{ $brand->id }}">
-                                            {{ $brand->name }}
-                                        </label>
-                                    </li>
-                                    @endforeach
-                                </ul>
-                            </li>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-12 col-sm-12 col-md-9 col-lg-9 main-col">
-                <div class="category-description">
-                    <p><center>✨ Step into timeless elegance with our designer lehenga collection. Crafted from luxurious fabrics, 
-                        adorned with intricate embroidery, and designed to flatter every silhouette, 
-                        each piece brings a blend of tradition and modern charm. Perfect for weddings, festivities, 
-                        or grand celebrations – make every occasion unforgettable with your dream lehenga.</center></p>
-                </div>
-                <hr>
+            <!--Main Content-->
+            <div class="col-12 main-col">
                 <div class="productList">
-                    <!--Toolbar-->
-                    <button type="button" class="btn btn-filter d-block d-md-none d-lg-none"> Product
-                        Filters</button>
-                    <div class="toolbar">
-                        <div class="filters-toolbar-wrapper">
-                            <div class="row">
-                                <div
-                                    class="col-4 col-md-4 col-lg-4 filters-toolbar__item collection-view-as d-flex justify-content-start align-items-center">
-                                    <a href="shop-left-sidebar.html" title="Grid View"
-                                        class="change-view change-view--active">
-                                        <img src="{{ publicPath('themeAssets//images/grid.jpg') }}" alt="Grid" />
-                                    </a>
-                                    <a href="shop-listview.html" title="List View" class="change-view">
-                                        <img src="{{ publicPath('themeAssets//images/list.jpg') }}" alt="List" />
-                                    </a>
-                                </div>
-                                <div
-                                    class="col-4 col-md-4 col-lg-4 text-center filters-toolbar__item filters-toolbar__item--count d-flex justify-content-center align-items-center">
-                                    <span class="filters-toolbar__product-count product-count">Showing: {{ $products->count() }} of {{ $products->total() }}</span>
-                                </div>
-                                <div class="col-4 col-md-4 col-lg-4 text-right">
-                                    <div class="filters-toolbar__item">
-                                        <label for="SortBy" class="hidden">Sort</label>
-                                        <select name="SortBy" id="SortBy"
-                                            class="filters-toolbar__input filters-toolbar__input--sort">
-                                            <option value="title-ascending" selected="selected">Sort</option>
-                                            @php
-                                            $sort_by_list = [
-                                            'price_low_to_high' => 'Price (Low to High)',
-                                            'price_high_to_low' => 'Price (High to Low)',
-                                            'new_to_old' => 'Latest',
-                                            'old_to_new' => 'Oldest',
-                                            ];
-                                            $sort_by = request()->sort_by && isset($sort_by_list[request()->sort_by])
-                                            ? request()->sort_by
-                                            : 'new_to_old';
-                                            @endphp
-                                            @foreach ($sort_by_list as $key => $value)
-                                            @php
-                                            $selected = $key == $sort_by ? 'selected' : '';
-                                            @endphp
-                                            <option value="{{ $key }}" {{ $selected }}>{{ $value }}</option>
-                                            @endforeach
-                                        </select>
-                                        <input class="collection-header__default-sort" type="hidden" value="manual">
-                                    </div>
-                                </div>
-
-                            </div>    
-                        </div>
-                    </div>
-                    <!--End Toolbar-->
-
                     <div class="grid-products grid--view-items">
                         <div class="row">
                             @if ($products->count() > 0)
+                            @foreach ($products as $items)
+                            <div class="col-6 col-sm-6 col-md-4 col-lg-3 item">
+                                <!-- start product image -->
+                                <div class="product-image">
+                                    <a href="{{ route('product', $items->slug) }}">
+                                        <img class="primary blur-up lazyload"
+                                            data-src="{{ asset('storage/' . $items->image_array[0]) }}"
+                                            src="{{ asset('storage/' . $items->image_array[0]) }}"
+                                            alt="{{ $items->name }}">
 
-                            <div class="product-list row" data-page="{{ $products->currentPage() }}" data-last-page="{{ $products->lastPage() }}" data-total-pages="{{ $products->total() }}" data-to="{{ $products->count() }}">
+                                        <img class="hover blur-up lazyload"
+                                            data-src="{{ asset('storage/' . ($items->image_array[1] ?? $items->image_array[0])) }}"
+                                            src="{{ asset('storage/' . ($items->image_array[1] ?? $items->image_array[0])) }}"
+                                            alt="{{ $items->name }}">
 
-                                @foreach ($products as $items)
-                                <div class="col-6 col-lg-4 item">
-                                    @include('components.product-card', ['items' => $items])
-                                    @endforeach
+                                        @if (!empty($items->sale_price))
+                                        @php
+                                        $percent =
+                                        (($items->price - $items->sale_price) / $items->price) * 100;
+                                        @endphp
+                                        <div class="product-labels rectangular">
+                                            <span class="lbl on-sale">- {{ round($percent) }}%</span>
+                                            <span class="lbl pr-label1">new</span>
+                                        </div>
+                                        @endif
+                                    </a>
+
+                                    <!-- Start product button -->
+                                    @if ($items->qty > 0)
+                                    <div class="variants add text-center mt-2">
+                                        <a href="{{ url('/order-whatsapp/' . $items->id) }}"
+                                            class="btn btn-whatsapp"
+                                            target="_blank" rel="noopener">
+                                            <i class="fa fa-whatsapp"></i> Order on WhatsApp
+                                        </a>
+                                    </div>
+                                    @else
+                                    <div class="variants add">
+                                        <button class="btn btn-add-to-cart">
+                                            Coming Soon
+                                        </button>
+                                    </div>
+                                    @endif
                                 </div>
+                                <!-- end product image -->
 
-                                <div class="loading-spinner loading-spinner-product text-center">Loading...</div>
-                                @else
-                                <div class="col-12 text-center mt-4">
-                                    <p>No Product Found, try another category or brand.</p>
+                                <!--start product details -->
+                                <div class="product-details text-center">
+                                    <div class="product-name">
+                                        <a href="{{ route('product', $items->slug) }}">
+                                            {{ $items->name }}
+                                        </a>
+                                    </div>
+
+                                    @if (!empty($items->sale_price))
+                                    <div class="product-price">
+                                        <span class="old-price">₹{{ $items->price }}</span>
+                                        <span class="price">₹{{ $items->sale_price }}</span>
+                                    </div>
+                                    @else
+                                    <div class="product-price">
+                                        <span class="price">₹{{ $items->price }}</span>
+                                    </div>
+                                    @endif
+
+                                    <div class="product-review">
+                                        @for ($i = 1; $i <= 5; $i++)
+                                            <i
+                                            class="font-13 fa {{ $i <= $items->rating ? 'fa-star text-warning' : 'fa-star-o' }}"></i>
+                                            @endfor
+                                    </div>
                                 </div>
-                                @endif
-
-
+                                <!-- End product details -->
                             </div>
+                            @endforeach
+                            @else
+                            <div class="col-12 text-center mt-4">
+                                <p>No Product Found, try another category or brand.</p>
+                            </div>
+                            @endif
                         </div>
-                    </div>
-                    <hr class="clear">
-                    <div class="pagination">
-                        <ul>
-                            <li class="active"><a href="#">1</a></li>
-                            <li><a href="#">2</a></li>
-                            <li class="next"><a href="#"><i class="fa fa-caret-right"
-                                        aria-hidden="true"></i></a></li>
-                        </ul>
                     </div>
                 </div>
             </div>
+            <!--End Main Content-->
         </div>
-
     </div>
+</div>
+
+<style>
+    /* WhatsApp button styling */
+    .btn-whatsapp {
+        background-color: #25D366 !important;
+        color: #fff !important;
+        border: none;
+        padding: 10px 18px;
+        font-weight: 600;
+        font-size: 15px;
+        border-radius: 8px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+        text-align: center;
+        white-space: nowrap;
+        width: auto;
+        box-shadow: 0 4px 10px rgba(37, 211, 102, 0.3);
+    }
+
+    .btn-whatsapp i {
+        font-size: 18px;
+    }
+
+    .btn-whatsapp:hover {
+        background-color: #1EBE5D !important;
+        box-shadow: 0 6px 14px rgba(37, 211, 102, 0.45);
+        transform: translateY(-2px);
+    }
+
+    .btn-whatsapp:active {
+        transform: scale(0.97);
+    }
+
+    /* 📱 Mobile View */
+    @media only screen and (max-width: 1024px) {
+        .btn-whatsapp {
+            width: 100%;
+            font-size: 14px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            justify-content: center;
+            background-color: #25D366 !important;
+            color: #fff !important;
+        }
+    }
+</style>
