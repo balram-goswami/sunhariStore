@@ -64,8 +64,8 @@ $count = Cart::instance('shopping')->count();
     @else
     <div class="header-wrap animated d-flex border-bottom">
         @endif
-        <div class="container-fluid" style="background-color: #dcdcdc73">
-            <div class="row align-items-center">
+        <div class="container-fluid" style="background-color: #000000ff">
+            <div class="row align-items-center" >
                 <!--Desktop Logo-->
                 <div class="logo col-md-2 col-lg-2 d-none d-lg-block">
                     <a href="{{ route('homePage') }}">
@@ -166,9 +166,9 @@ $count = Cart::instance('shopping')->count();
                             </div>
                         </div>
                     </div>
-                    <div class="site-header__search">
+                    <!-- <div class="site-header__search">
                         <button type="button" class="search-trigger"><i class="icon anm anm-search-l"></i></button>
-                    </div>
+                    </div> -->
                 </div>
             </div>
         </div>

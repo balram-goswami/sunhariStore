@@ -777,15 +777,15 @@ textarea:-ms-input-placeholder {
 }
 
 .top-header {
-  color: #fff;
+  color: #000000;
   padding-top: 8px;
   padding-bottom: 10px;
-  background: #141414;
+  background: #ffffff;
   height: 38px;
 }
 
 .top-header a {
-  color: #fff;
+  color: #000000;
 }
 
 .top-header p,
@@ -794,7 +794,7 @@ textarea:-ms-input-placeholder {
 .top-header .fa,
 .top-header span.selected-currency,
 .top-header .language-dd {
-  color: #ffffff;
+  color: #000000;
   font-size: 12px;
   margin-bottom: 0;
   text-decoration: none;
@@ -926,7 +926,7 @@ textarea:-ms-input-placeholder {
 }
 
 .site-header__cart {
-  color: #000;
+  color: #ffffff;
   text-decoration: none;
 }
 
@@ -943,7 +943,7 @@ textarea:-ms-input-placeholder {
   font-size: 11px;
   display: inline-block;
   color: #fff;
-  background-color: #000;
+  background-color: #818181;
   border-radius: 50%;
   text-align: center;
   width: 14px;
@@ -989,7 +989,7 @@ textarea:-ms-input-placeholder {
 }
 
 #header-cart #cart-title strong {
-  color: #000000;
+  color: #bebebe;
 }
 
 #header-cart .variant-cart {
@@ -1296,7 +1296,7 @@ textarea:-ms-input-placeholder {
   }
 
   #siteNav>li>a {
-    color: #000000;
+    color: #ffffff;
     padding: 0 20px;
     text-transform: uppercase;
     line-height: 40px;
@@ -1312,7 +1312,7 @@ textarea:-ms-input-placeholder {
 
   #siteNav>li>a:hover:hover,
   #siteNav>li>a:hover {
-    color: #339498;
+    color: #fd0202;
   }
 
   #siteNav>li .megamenu {
