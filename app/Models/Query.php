@@ -10,11 +10,11 @@ class Query extends Model
 
     protected $fillable = [
         'query_type',
-        'user_id',
-        'customer_id',
         'name',
         'email',
+        'number',
+        'subject',
         'message',
-        'number'
+        'response'
     ];
 }

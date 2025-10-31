@@ -54,24 +54,21 @@
             <p>We'd love to hear from you! Please fill out the form below and we'll get back to you shortly.</p>
 
             @if (session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
+            <div class="alert alert-success">{{ session('success') }}</div>
             @endif
 
             @if ($errors->any())
-                <div class="alert alert-danger">
-                    <ul class="mb-0">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
+            <div class="alert alert-danger">
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
             @endif
 
             <form action="{{ route('contactus.form') }}" method="POST" class="contact-form">
                 @csrf
-                <input type="text" name="fake_entry" style="display:none;">
-                <input type="hidden" name="query_from" value="Website">
-
                 <div class="row">
                     <div class="col-md-6 mb-3">
                         <input type="text" name="name" placeholder="Name" class="form-control"
@@ -82,8 +79,8 @@
                             value="{{ old('email') }}" required>
                     </div>
                     <div class="col-md-6 mb-3">
-                        <input type="tel" name="mobile" placeholder="Phone Number" class="form-control"
-                            value="{{ old('mobile') }}">
+                        <input type="tel" name="number" placeholder="Phone Number" class="form-control"
+                            value="{{ old('number') }}">
                     </div>
                     <div class="col-md-6 mb-3">
                         <input type="text" name="subject" placeholder="Subject" class="form-control"
@@ -120,31 +117,31 @@
 </div>
 
 <script>
-document.querySelector('.contact-form').addEventListener('submit', function(e) {
-    e.preventDefault();
-    let formData = new FormData(this);
+    document.querySelector('.contact-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        let formData = new FormData(this);
 
-    fetch(this.action, {
-        method: 'POST',
-        headers: {
-            'X-CSRF-TOKEN': '{{ csrf_token() }}',
-            'Accept': 'application/json'
-        },
-        body: formData
-    })
-    .then(response => response.json().then(data => ({
-        status: response.status,
-        body: data
-    })))
-    .then(obj => {
-        if (obj.status === 200) {
-            // Redirect to thank you page
-            window.location.href = "{{ route('form.save') }}";
-        } else {
-            // Show error message
-            alert(obj.body.message);
-        }
-    })
-    .catch(err => console.error(err));
-});
+        fetch(this.action, {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
+                    'Accept': 'application/json'
+                },
+                body: formData
+            })
+            .then(response => response.json().then(data => ({
+                status: response.status,
+                body: data
+            })))
+            .then(obj => {
+                if (obj.status === 200) {
+                    // Redirect to thank you page
+                    window.location.href = "{{ route('form.save') }}";
+                } else {
+                    // Show error message
+                    alert(obj.body.message);
+                }
+            })
+            .catch(err => console.error(err));
+    });
 </script>

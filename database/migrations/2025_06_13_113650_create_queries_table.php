@@ -14,10 +14,10 @@ return new class extends Migration
         Schema::create('queries', function (Blueprint $table) {
             $table->id();
             $table->string('query_type');
-            $table->foreignId('user_id')->nullable()->constrained('users')->cascadeOnDelete();
-            $table->string('customer_id');
             $table->string('name');
             $table->string('email')->unique();
+            $table->integer('number');
+            $table->string('subject');
             $table->text('message')->nullable();
             $table->timestamps();
         });

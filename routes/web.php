@@ -31,11 +31,11 @@ Route::get('product/{slug}', [ShopController::class, 'product'])
 
 
 // Contact & Subscription Forms
-Route::post('contactus-form', [HomeController::class, 'contactUsForm'])->name('contactus.form');
-Route::post('subscribe-form', [HomeController::class, 'subscribeForm'])->name('subscribe.form');
+Route::post('contactus-form', [FormController::class, 'contactUsForm'])->name('contactus.form');
+Route::post('subscribe-form', [FormController::class, 'subscribeForm'])->name('subscribe.form');
 
 // Misc
-Route::get('form-save', [HomeController::class, 'formsave'])->name('form.save');
+Route::get('form-save', [FormController::class, 'formsave'])->name('form.save');
 
 Route::get('cart', [CartController::class, 'cart'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -64,7 +64,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
 // Order WhatsApp
 Route::get('/order-whatsapp/{order}', [ShopController::class, 'orderOnWhatsapp']);
-Route::post('/chatbot/store', [FormController::class, 'store'])->name('chatbot.store');
+Route::post('/chatbotSave', [FormController::class, 'saveChat'])->name('chatbot.save');
 
 
 // --------------------
@@ -121,4 +121,3 @@ require __DIR__ . '/auth.php';
 Route::get('/sitemap.xml', function () {
     return response()->file(public_path('sitemap.xml'));
 });
-

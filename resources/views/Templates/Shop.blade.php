@@ -7,7 +7,7 @@
                     src="{{ publicPath('themeAssets/images/cat-women.jpg') }}" alt="Women" title="Women" />
             </div>
             <div class="collection-hero__title-wrapper">
-                <h1 class="collection-hero__title page-width">Products</h1>
+                <h1 class="collection-hero__title page-width">Shop</h1>
             </div>
         </div>
     </div>
@@ -50,6 +50,7 @@
 
                                     <!-- Start product button -->
                                     @if ($items->qty > 0)
+                                    
                                     <div class="variants add text-center mt-2">
                                         <a href="{{ url('/order-whatsapp/' . $items->id) }}"
                                             class="btn btn-whatsapp"

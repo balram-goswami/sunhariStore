@@ -67,7 +67,7 @@
 
                     <tfoot>
                         <tr>
-                            <td colspan="3" class="text-left"><a href="http://annimexweb.com/"
+                            <td colspan="3" class="text-left"><a href="{{ route('products')}}"
                                     class="btn--link cart-continue"><i class="icon icon-arrow-circle-left"></i>
                                     Continue shopping</a></td>
                             <td colspan="3" class="text-right"><button type="submit" name="update"
