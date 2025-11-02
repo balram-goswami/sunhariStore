@@ -218,12 +218,11 @@
             <nav>
                 <a href="#" class="active" onclick="showSection(event, 'profile')">Profile</a>
                 <a href="#" onclick="showSection(event, 'address')">Addresses</a>
-                <a href="#" onclick="showSection(event, 'cards')">Cards</a>
                 <a href="#" onclick="showSection(event, 'orders')">Orders</a>
                 <a href="#" onclick="showSection(event, 'wishlist')">Wishlist</a>
             </nav>
         </div>
-        <a href="{{ route('profile.destroy') }}" class="logout">Logout</a>
+        <a href="#" class="logout" onclick="logoutUser(event)">Logout</a>
     </div>
 
     <!-- Content -->
@@ -243,35 +242,21 @@
             <div class="card">
                 <h3>Saved Addresses</h3>
                 <div class="address-grid">
+                    @forelse ($addresses as $address)
                     <div class="address-box">
-                        <strong>Home</strong>
-                        <p>123 Main Street, Mumbai, India</p>
+                        <strong>{{ ucfirst($address->type) }}</strong>
+                        <p>{{ $address->fname }} {{ $address->lname }}</p>
+                        <p>{{ $address->line1 }} {{ $address->line2 }}</p>
+                        <p>{{ $address->city }}, {{ $address->state }} {{ $address->postal_code }}</p>
+                        <p>{{ $address->country }}</p>
+                        <p><strong>Phone:</strong> {{ $address->phone }}</p>
+                        @if ($address->is_default)
+                        <p style="color:#10b981;font-weight:600;">(Default Address)</p>
+                        @endif
                     </div>
-                    <div class="address-box">
-                        <strong>Office</strong>
-                        <p>45 Park Avenue, Pune, India</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cards -->
-        <div id="cards" class="section">
-            <div class="card">
-                <h3>Saved Cards</h3>
-                <div class="credit-card visa">
-                    <div class="number">**** **** **** 1234</div>
-                    <div class="bottom">
-                        <span>JOHN DOE</span>
-                        <span>12/27</span>
-                    </div>
-                </div>
-                <div class="credit-card mastercard">
-                    <div class="number">**** **** **** 5678</div>
-                    <div class="bottom">
-                        <span>JOHN DOE</span>
-                        <span>08/25</span>
-                    </div>
+                    @empty
+                    <p>No address found.</p>
+                    @endforelse
                 </div>
             </div>
         </div>
@@ -280,11 +265,15 @@
         <div id="orders" class="section">
             <div class="card">
                 <h3>Recent Orders</h3>
+                @if(isset($orders) && count($orders) > 0)
                 <ul>
-                    <li>#1234 – Delivered ✅</li>
-                    <li>#1235 – Shipped 🚚</li>
-                    <li>#1236 – Processing ⏳</li>
+                    @foreach ($orders as $order)
+                    <li>#{{ $order->id }} – {{ ucfirst($order->status) }}</li>
+                    @endforeach
                 </ul>
+                @else
+                <p style="color:#6b7280;">No orders found.</p>
+                @endif
             </div>
         </div>
 
@@ -292,13 +281,12 @@
         <div id="wishlist" class="section">
             <div class="card">
                 <h3>Wishlist</h3>
-                <ul>
-                    <li>👗 Red Lehenga</li>
-                    <li>💍 Gold Necklace</li>
-                    <li>⌚ Smart Watch</li>
-                </ul>
+                
+                <p style="color:#6b7280;">Your wishlist is empty.</p>
+                
             </div>
         </div>
+
     </div>
 </div>
 
@@ -310,4 +298,18 @@
         event.target.classList.add('active');
         document.getElementById(id).classList.add('active');
     }
+</script>
+
+
+<script>
+async function logoutUser(e) {
+    e.preventDefault();
+    await fetch("{{ route('logout') }}", {
+        method: "POST",
+        headers: {
+            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+        }
+    });
+    window.location.href = "/";
+}
 </script>

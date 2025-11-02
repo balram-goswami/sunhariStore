@@ -121,3 +121,12 @@ require __DIR__ . '/auth.php';
 Route::get('/sitemap.xml', function () {
     return response()->file(public_path('sitemap.xml'));
 });
+
+// route to view email templates
+Route::get('/preview-welcome', function () {
+    $user = (object)['name' => 'Test User'];
+    $name = 'Test User';
+    $data = siteSetting();
+    $email = 'example@gmai.com';
+    return view('emails.subscriber_welcome', compact('user', 'data', 'email', 'name'));
+});

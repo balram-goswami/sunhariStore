@@ -6,11 +6,10 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
 use GuzzleHttp\Client;
-use App\Models\{Product, SiteSetting, Slider};
-
+use App\Models\{Product, SiteSetting, Slider, CustomerAddress, Order};
 
 use Illuminate\Support\Facades\Http;
-use Validator, DateTime, Config, Helpers, Hash, DB, Session, Auth, Redirect;
+use Validator, DateTime, Config, Helpers, Hash, DB, Session, Auth, Redirect, Cart;
 
 class HomeController extends Controller
 {
@@ -39,6 +38,9 @@ class HomeController extends Controller
   {
     $userData = Auth::user();
 
+    $addresses = CustomerAddress::where('customer_id', $userData->id)->get();
+    $orders = Order::where('customer_id', $userData->id)->get();
+
     $breadcrumbs = [
       'title' => $data->meta_title ?? 'Sunhari',
       'metaTitle' => $data->meta_title ?? 'Sunhari',
@@ -51,7 +53,7 @@ class HomeController extends Controller
 
     $view = "Templates.Profile";
 
-    return view('Front', compact('view', 'userData', 'breadcrumbs'));
+    return view('Front', compact('view', 'userData', 'breadcrumbs', 'addresses', 'orders'));
   }
 
   public function contuctUs()

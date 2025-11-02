@@ -21,7 +21,8 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
-        return view('auth.register'); 
+        $view = "Templates.Register";
+        return view('Front', compact('view'));
     }
 
     /**
@@ -43,7 +44,7 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'phone' => $request->phone,
             'password' => Hash::make($request->password),
-            'role' => UserRoles::User->value, // default role
+            'role' => UserRoles::User->value,
         ]);
 
         event(new Registered($user));

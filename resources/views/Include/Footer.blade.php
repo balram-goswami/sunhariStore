@@ -115,7 +115,7 @@ $data = siteSetting();
                             @elseif(auth()->user()->isManager())
                             <li><a href="{{ url('/admin/dashboard') }}">Manager Dashboard</a></li>
                             @elseif(auth()->user()->isUser())
-                            <li><a href="">My Profile</a></li>
+                            <li><a href="{{ route('profile') }}">My Profile</a></li>
                             @endif
                             @else
                             <li><a href="{{ route('login') }}">Login</a></li>
