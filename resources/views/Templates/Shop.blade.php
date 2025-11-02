@@ -52,7 +52,7 @@
 
                                     <!-- Start product button -->
                                     @if ($items->qty > 0)
-                                    @if($items->has_variants)
+                                    <!-- @if($items->has_variants)
                                     <div class="variants add">
                                         <a href="{{ route('product', $items->slug) }}" class="btn"
                                             style="letter-spacing: 0;">Select Options</a>
@@ -71,16 +71,16 @@
                                                 <i class="icon anm anm-heart-l"></i>
                                             </a>
                                         </div>
-                                    </div>
+                                    </div> -->
                                     @endif
 
-                                    <!-- <div class="variants add text-center mt-2">
+                                    <div class="variants add text-center mt-2">
                                         <a href="{{ url('/order-whatsapp/' . $items->id) }}"
                                             class="btn btn-whatsapp"
                                             target="_blank" rel="noopener">
                                             <i class="fa fa-whatsapp"></i> Order on WhatsApp
                                         </a>
-                                    </div> -->
+                                    </div>
                                     @else
                                     <div class="variants add">
                                         <button class="btn btn-add-to-cart">
