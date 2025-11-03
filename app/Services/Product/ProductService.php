@@ -40,7 +40,7 @@ class ProductService
                 }
             })
             ->orderBy($this->sort_by_list[$sort_by][0], $this->sort_by_list[$sort_by][1])
-            ->paginate(20);
+            ->paginate(4);
     }
 
     public function getProductsCards($products)
