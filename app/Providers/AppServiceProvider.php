@@ -8,6 +8,7 @@ use Filament\Facades\Filament;
 use App\Models\Tenant;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Pagination\Paginator;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,5 +29,7 @@ class AppServiceProvider extends ServiceProvider
             $words = str_word_count(strip_tags($value));
             return $words <= $limit;
         }, 'The :attribute must not be more than :max_words words.');
+
+        Paginator::useBootstrapFive();
     }
 }
