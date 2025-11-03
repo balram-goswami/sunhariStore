@@ -32,7 +32,7 @@
 #chat-box {
     width: 340px;
     height: 480px;
-    background: #e5ddd5 url('https://i.imgur.com/4J7JpAO.png') repeat;
+    background: #e5ddd5;
     background-size: cover;
     border-radius: 12px;
     box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
