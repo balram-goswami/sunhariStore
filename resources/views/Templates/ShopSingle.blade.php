@@ -119,10 +119,13 @@
                             </div>
                         </div>
                         <div class="product-single__description rte">
+                            @if(!empty($product->spec))
                             <ul>
-                                <li><strong>Color:</strong> Dusty Mauve</li>
-                                <li><strong>Size:</strong> Free Size</li>
+                                @foreach($product->spec as $key => $value)
+                                <li><strong>{{ $key }}:</strong> {{ $value }}</li>
+                                @endforeach
                             </ul>
+                            @endif
                             <p>{{ $product->excerpt }}</p>
                         </div>
                         @if ($product->qty > 0)
