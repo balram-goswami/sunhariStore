@@ -58,15 +58,7 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->hasMany(Product::class);
     }
-    public function customers()
-    {
-        return $this->hasMany(Customer::class);
-    }
-    public function commission()
-    {
-        return $this->hasOne(Commission::class, 'user_id');
-    }
-
+    
     public function scopeFrontendUsers($query)
     {
         return $query->where('role', 'user'); // assuming role is 'user' for customers

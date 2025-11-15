@@ -27,6 +27,8 @@ return new class extends Migration
 
             $table->json('brand_logo')->nullable();
             $table->longText('brand_details')->nullable();
+            
+            $table->json('sale_links')->nullable();
 
             // Main Product pricing....
             $table->string('sku')->unique();

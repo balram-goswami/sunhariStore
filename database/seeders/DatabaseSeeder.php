@@ -24,7 +24,7 @@ class DatabaseSeeder extends Seeder
         ]);
         User::factory()->create([
             'name' => 'Vendor User',
-            'email' => 'smanager@sunhari.com',
+            'email' => 'manager@sunhari.com',
             'password' => Hash::make('manager@123'),
             'role' => 2,
         ]);

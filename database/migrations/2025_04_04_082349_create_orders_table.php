@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('users')->cascadeOnDelete();
+            $table->foreignId('user_id')->constrained('users')->cascadeOnDelete();
             $table->string('ip');
             $table->integer('billing_id');
             $table->integer('shipping_id');
@@ -70,17 +70,6 @@ return new class extends Migration
             $table->decimal('amount', 10, 2)->default(0.00);
         });
 
-        Schema::create('order_notes', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->foreignId('user_id')->constrained('users')->noActionOnDelete();
-            $table->integer('type');
-            $table->string('note');
-            $table->integer('status');
-
-            $table->timestamps();
-        });
-
         Schema::create('order_refunds', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
@@ -133,7 +122,7 @@ return new class extends Migration
         Schema::create('order_coupons', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->cascadeOnDelete();
-            $table->foreignId('customer_id')->constrained('customers')->noActionOnDelete();
+            $table->foreignId('user_id')->constrained('users')->noActionOnDelete();
             $table->string('coupon');
             $table->decimal('amount', 10, 2)->default(0.00);
 
@@ -150,7 +139,6 @@ return new class extends Migration
     {
         Schema::dropIfExists('order_refund_items');
         Schema::dropIfExists('order_refunds');
-        Schema::dropIfExists('order_notes');
         Schema::dropIfExists('order_coupons');
         Schema::dropIfExists('order_shippings');
         Schema::dropIfExists('order_taxes');

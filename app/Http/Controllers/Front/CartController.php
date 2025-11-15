@@ -52,16 +52,20 @@ class CartController extends Controller
     {
         try {
             $cart = $this->cartService->addProduct($request);
-        } catch (\Exception $e) {
-            return response()->json(['success' => false, 'message' => $e->getMessage()]);
-        }
 
-        return response()->json([
-            'success'   => true,
-            'message'   => 'Product added to cart successfully.',
-            'data' => $cart,
-        ]);
+            return response()->json([
+                'success' => true,
+                'message' => 'Product added to cart successfully.',
+                'data' => $cart,
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => $e->getMessage(),
+            ]);
+        }
     }
+
 
     public function updateQuantity(Request $request)
     {
@@ -96,56 +100,18 @@ class CartController extends Controller
 
     public function checkout()
     {
+        $user       = Auth()->id(); 
         $cartItems  = Cart::instance('shopping')->content();
         $subtotal   = Cart::instance('shopping')->subtotal();
         $total      = Cart::instance('shopping')->total();
+        $address    = CustomerAddress::where('customer_id', $user)->get()->all();
 
         $view = "Templates.Checkout";
-
-        return view('Front', compact('view', 'cartItems', 'subtotal', 'total'));
+        return view('Front', compact('view', 'cartItems', 'subtotal', 'total', 'address'));
     }
 
-
-
-    public function applyCoupon(Request $request)
+    public function applyCoupon(Request $request) 
     {
-        $couponCode = $request->input('code');
-        $coupon = ProductCoupon::where('code', $couponCode)->first();
 
-        $customerId = Auth::guard('customer')->id();
-        $cartItems = Cart::instance('shopping')->content();
-        $subtotal = (float) $cartItems->sum('sub_total');
-
-        // ADD LOGGING HERE to debug values
-        \Log::info('Coupon Validation Debug', [
-            'subtotal'          => $subtotal,
-            'coupon_code'       => $couponCode,
-            'expire'            => $coupon?->expire,
-            'minimum_amount'    => $coupon?->minimum_amount,
-            'maximum_amount'    => $coupon?->maximum_amount,
-            'now' => now(),
-        ]);
-
-        if (!$coupon || !$coupon->isValid($subtotal)) {
-            return response()->json(['success' => false, 'message' => 'Coupon is not valid for this cart total.']);
-        }
-
-        $discount = $coupon->calculateDiscount($subtotal);
-        $total = $subtotal - $discount;
-
-        session([
-            'coupon'                => $couponCode,
-            'discount'              => $discount,
-            'total_after_discount'  => $total,
-        ]);
-
-        return response()->json([
-            'success' => true,
-            'totals' => [
-                'subtotal'  => number_format($subtotal, 2),
-                'discount'  => number_format($discount, 2),
-                'total'     => number_format($total, 2),
-            ]
-        ]);
     }
 }

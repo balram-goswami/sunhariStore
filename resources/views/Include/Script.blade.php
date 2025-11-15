@@ -10,26 +10,28 @@
 <script src="{{ publicPath('/themeAssets/js/lazysizes.js') }}"></script>
 <script src="{{ publicPath('/themeAssets/js/main.js') }}"></script>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
-
-
 <script>
-    const csrfToken = "{{ csrf_token() }}";
-    const addToCartUrl = "{{ route('cart.add') }}";
-    const cartUpdateUrl = "{{ route('cart.updateQuantity') }}";
-    const cartRemoveUrl = "{{ route('cart.removeItem') }}";
+    window.csrfToken = "{{ csrf_token() }}";
+    window.addToCartUrl = "{{ route('cart.add') }}";
+    window.cartUpdateUrl = "{{ route('cart.updateQuantity') }}";
+    window.cartRemoveUrl = "{{ route('cart.removeItem') }}";
+    window.cartHeaderUrl = "{{ route('cart.header') }}";
+    window.cart = "{{ route('cart') }}";
+    window.checkout = "{{ route('cart.checkout') }}";
+    window.storageUrl = "{{ asset('storage') }}/";
 </script>
+
 <script src="{{ asset('cart.js') }}"></script>
 <script src="{{ asset('product-detail.js') }}"></script>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
     $(document).ready(function() {
-
-
         // Add/Remove wishlist
         $(document).on('click', '.wishlist-toggle', function(e) {
             e.preventDefault();
@@ -76,7 +78,5 @@
                 });
             }
         });
-
-
     });
 </script>

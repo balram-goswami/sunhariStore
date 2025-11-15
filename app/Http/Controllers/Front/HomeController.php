@@ -51,7 +51,7 @@ class HomeController extends Controller
       ]
     ];
 
-    $view = "Templates.Profile";
+    $view = "profile.Profile";
 
     return view('Front', compact('view', 'userData', 'breadcrumbs', 'addresses', 'orders'));
   }

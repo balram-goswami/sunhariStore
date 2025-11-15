@@ -119,7 +119,11 @@
                             </div>
                         </div>
                         <div class="product-single__description rte">
-                            <p>{{ $product->short_description }}</p>
+                            <ul>
+                                <li><strong>Color:</strong> Dusty Mauve</li>
+                                <li><strong>Size:</strong> Free Size</li>
+                            </ul>
+                            <p>{{ $product->excerpt }}</p>
                         </div>
                         @if ($product->qty > 0)
                         <div id="quantity_message">
@@ -130,40 +134,10 @@
                             Out of Stock
                         </div>
                         @endif
-                        <form method="post" action="http://annimexweb.com/cart/add" id="product_form_10508262282"
-                            accept-charset="UTF-8" class="product-form product-form-product-template hidedropdown"
-                            enctype="multipart/form-data">
-                            <div class="swatch clearfix swatch-0 option1" data-option-index="0">
-                                <div class="product-form__item">
-                                    <label class="header">Color: <span class="slVariant">Red</span></label>
-                                    <div data-value="Black" class="swatch-element color black available">
-                                        <input class="swatchInput" id="swatch-0-black" type="radio"
-                                            name="option-0" value="Black"><label class="swatchLbl color small"
-                                            for="swatch-0-black" style="background-color:black;"
-                                            title="Black"></label>
-                                    </div>
-                                    <div data-value="Maroon" class="swatch-element color maroon available">
-                                        <input class="swatchInput" id="swatch-0-maroon" type="radio"
-                                            name="option-0" value="Maroon"><label class="swatchLbl color small"
-                                            for="swatch-0-maroon" style="background-color:maroon;"
-                                            title="Maroon"></label>
-                                    </div>
-                                    <div data-value="Blue" class="swatch-element color blue available">
-                                        <input class="swatchInput" id="swatch-0-blue" type="radio" name="option-0"
-                                            value="Blue"><label class="swatchLbl color small" for="swatch-0-blue"
-                                            style="background-color:blue;" title="Blue"></label>
-                                    </div>
-                                    <div data-value="Dark Green" class="swatch-element color dark-green available">
-                                        <input class="swatchInput" id="swatch-0-dark-green" type="radio"
-                                            name="option-0" value="Dark Green"><label class="swatchLbl color small"
-                                            for="swatch-0-dark-green" style="background-color:darkgreen;"
-                                            title="Dark Green"></label>
-                                    </div>
-                                </div>
-                            </div>
-                            <!-- Product Action -->
-                            <div class="product-action clearfix">
-                                <!-- <div class="product-form__item--quantity">
+
+                        <!-- Product Action -->
+                        <div class="product-action clearfix">
+                            <!-- <div class="product-form__item--quantity">
                                     <div class="wrapQtyBtn">
                                         <div class="qtyField">
                                             <a class="qtyBtn minus" href="javascript:void(0);">
@@ -178,8 +152,8 @@
                                     </div>
                                 </div> -->
 
-                                @if ($product->qty >= 1)
-                                <!-- <div class="product-form__item--submit">
+                            @if ($product->qty >= 1)
+                            <!-- <div class="product-form__item--submit">
                                     <button type="button" name="add" class="btn product-form__cart-submit">
                                         <span>Add to cart</span>
                                     </button>
@@ -191,65 +165,63 @@
                                     </button>
                                 </div> -->
 
-                                <div class="product-form__item--submit">
-                                    <a href="{{ url('/order-whatsapp/'.$product->id) }}"
-                                        class="btn btn-success">
-                                        Order on WhatsApp
-                                    </a>
-                                </div>
-
-                                @else
-                                <!-- Out of Stock → Show Coming Soon -->
-                                <div class="product-form__item--submit">
-                                    <button type="button" class="btn btn-secondary" disabled>
-                                        <span>Coming Soon</span>
-                                    </button>
-                                </div>
-                                @endif
+                            <div class="product-form__item--submit">
+                                <a href="{{ url('/order-whatsapp/'.$product->id) }}"
+                                    class="btn btn-success">
+                                    Order on WhatsApp
+                                </a>
                             </div>
 
-                            <!-- End Product Action -->
-                        </form>
+                            @else
+                            <!-- Out of Stock → Show Coming Soon -->
+                            <div class="product-form__item--submit">
+                                <button type="button" class="btn btn-secondary" disabled>
+                                    <span>Coming Soon</span>
+                                </button>
+                            </div>
+                            @endif
+                        </div>
                         <div class="display-table shareRow">
                             <div class="display-table-cell medium-up--one-third">
                                 <div class="wishlist-btn">
-                                    <a class="wishlist add-to-wishlist" href="#" title="Add to Wishlist"><i
+                                    <a class="wishlist add-to-wishlist" href="" title="Add to Wishlist"><i
                                             class="icon anm anm-heart-l" aria-hidden="true"></i> <span>Add to
                                             Wishlist</span></a>
                                 </div>
                             </div>
+                            @if(!empty($product->sale_links))
                             <div class="display-table-cell text-right">
-                                <div class="social-sharing">
-                                    <a target="_blank" href="#"
-                                        class="btn btn--small btn--secondary btn--share share-facebook"
-                                        title="Share on Facebook">
-                                        <i class="fa fa-facebook-square" aria-hidden="true"></i> <span
-                                            class="share-title" aria-hidden="true">Share</span>
-                                    </a>
-                                    <a target="_blank" href="#"
-                                        class="btn btn--small btn--secondary btn--share share-twitter"
-                                        title="Tweet on Twitter">
-                                        <i class="fa fa-twitter" aria-hidden="true"></i> <span class="share-title"
-                                            aria-hidden="true">Tweet</span>
-                                    </a>
-                                    <a href="#" title="Share on google+"
+                                <div class="available-on">
+                                    <span style="font-weight:600; font-size:16px; margin-right:10px;">
+                                        Available On:
+                                    </span>
+
+                                    @foreach($product->sale_links as $link)
+                                    <a target="_blank" href="{{ $link['url'] ?? '#' }}"
                                         class="btn btn--small btn--secondary btn--share">
-                                        <i class="fa fa-google-plus" aria-hidden="true"></i> <span
-                                            class="share-title" aria-hidden="true">Google+</span>
+
+                                        {{-- Amazon Icon --}}
+                                        @if($link['icon'] === 'amazon')
+                                        <i class="fa fa-amazon" aria-hidden="true"></i>
+                                        @endif
+
+                                        {{-- Flipkart Icon --}}
+                                        @if($link['icon'] === 'flipkart')
+                                        <img src="https://static.vecteezy.com/system/resources/thumbnails/054/650/802/small_2x/flipkart-logo-rounded-flipkart-logo-free-download-flipkart-logo-free-png.png"
+                                            style="width:16px; margin-right:4px;">
+                                        @endif
+
+                                        {{-- Meesho Icon (custom placeholder) --}}
+                                        @if($link['icon'] === 'meesho')
+                                        <img src="https://images.moneycontrol.com/static-mcnews/2023/06/Meesho-682x435.jpg?impolicy=website&width=770&height=431" style="width:16px; margin-right:4px;">
+                                        @endif
+
                                     </a>
-                                    <a target="_blank" href="#"
-                                        class="btn btn--small btn--secondary btn--share share-pinterest"
-                                        title="Pin on Pinterest">
-                                        <i class="fa fa-pinterest" aria-hidden="true"></i> <span class="share-title"
-                                            aria-hidden="true">Pin it</span>
-                                    </a>
-                                    <a href="#" class="btn btn--small btn--secondary btn--share share-pinterest"
-                                        title="Share by Email" target="_blank">
-                                        <i class="fa fa-envelope" aria-hidden="true"></i> <span class="share-title"
-                                            aria-hidden="true">Email</span>
-                                    </a>
+                                    @endforeach
                                 </div>
                             </div>
+                            @endif
+
                         </div>
 
                         <p id="freeShipMsg" class="freeShipMsg" data-price="{{ $product->sale_price ?? $product->price }}">

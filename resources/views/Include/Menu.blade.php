@@ -65,7 +65,7 @@ $count = Cart::instance('shopping')->count();
     <div class="header-wrap animated d-flex border-bottom">
         @endif
         <div class="container-fluid" style="background-color: #000000ff">
-            <div class="row align-items-center" >
+            <div class="row align-items-center">
                 <!--Desktop Logo-->
                 <div class="logo col-md-2 col-lg-2 d-none d-lg-block">
                     <a href="{{ route('homePage') }}">
@@ -111,65 +111,7 @@ $count = Cart::instance('shopping')->count();
                     </div>
                 </div>
                 <!--Mobile Logo-->
-                <div class="col-4 col-sm-3 col-md-3 col-lg-2">
-                    <div class="site-cart">
-                        <a href="#;" class="site-header__cart" title="Cart">
-                            <i class="icon anm anm-bag-l"></i>
-                            <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">{{ $count }}</span>
-                        </a>
-                        <!--Minicart Popup-->
-                        <div id="header-cart" class="block block-cart">
-                            <ul class="mini-products-list">
-                                @foreach($cart as $cartItems)
-                                <li class="item">
-                                    <a class="product-image" href="#">
-                                        <img src="themeAssets/images/product-images/cape-dress-1.jpg"
-                                            alt="3/4 Sleeve Kimono Dress" title="" />
-                                    </a>
-                                    <div class="product-details">
-                                        <a href="#" class="remove"><i class="anm anm-times-l"
-                                                aria-hidden="true"></i></a>
-                                        <a href="#" class="edit-i remove"><i class="anm anm-edit"
-                                                aria-hidden="true"></i></a>
-                                        <a class="pName" href="cart.html">{{ $cartItems->name }}</a>
-                                        <div class="variant-cart">{{ $cartItems->sku }}</div>
-                                        <div class="wrapQtyBtn">
-                                            <div class="qtyField">
-                                                <span class="label">Qty:</span>
-                                                <a class="qtyBtn minus" href="javascript:void(0);"><i
-                                                        class="fa anm anm-minus-r" aria-hidden="true"></i></a>
-                                                <input type="text" id="Quantity" name="quantity" value="1"
-                                                    class="product-form__input qty">
-                                                <a class="qtyBtn plus" href="javascript:void(0);"><i
-                                                        class="fa anm anm-plus-r" aria-hidden="true"></i></a>
-                                            </div>
-                                        </div>
-                                        <div class="priceRow">
-                                            <div class="product-price">
-                                                <span class="money">Rs {{$cartItems->price}}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                                @endforeach
-
-                            </ul>
-                            <div class="total">
-                                <div class="total-in">
-                                    <span class="label">Cart Subtotal:</span><span class="product-price"><span
-                                            class="money">Rs {{ $showTotal ?? 0 }}</span></span>
-                                </div>
-                                <div class="buttonSet text-center">
-                                    <a href="{{ route('cart') }}" class="btn btn-secondary btn--small">View Cart</a>
-                                    <a href="{{ route('cart.checkout') }}" class="btn btn-secondary btn--small">Checkout</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- <div class="site-header__search">
-                        <button type="button" class="search-trigger"><i class="icon anm anm-search-l"></i></button>
-                    </div> -->
-                </div>
+                @include('components.cart-offcanvas')
             </div>
         </div>
     </div>

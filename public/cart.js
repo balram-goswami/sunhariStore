@@ -21,13 +21,21 @@ class CartManager {
     cartHeader() {
         $.ajax({
             url: window.cartHeaderUrl,
-            method: "GET",
+            method: "POST",
+            data: {
+                _token: window.csrfToken,
+            },
             success: (res) => {
+                console.log('🧾 Cart header response:', res);
                 this.cart = res;
                 this.cartContent();
+            },
+            error: (xhr) => {
+                console.error('❌ Cart header error:', xhr.responseText);
             }
         });
     }
+
 
     initializeProductDetails() {
         if (this.swatchGroups) {
@@ -398,22 +406,38 @@ class CartManager {
             this.cart = res;
             $btn.text("Added to Cart");
             this.cartContent();
+
+            // ✅ SweetAlert success popup
+            Swal.fire({
+                icon: 'success',
+                title: 'Added to Cart!',
+                text: res.message || 'Product added to cart successfully.',
+                showConfirmButton: false,
+                timer: 1500
+            });
+        } else {
+            // ⚠️ Handle backend failure (like out of stock)
+            Swal.fire({
+                icon: 'warning',
+                title: 'Notice',
+                text: res.message || 'Unable to add product to cart.',
+            });
+            $btn.text("Add to Cart");
         }
     }
 
-    handleCartError($btn) {
+    handleCartError($btn, error = null) {
+        console.error("Cart error:", error);
         $btn.text("Add to Cart");
+
         Swal.fire({
             icon: 'error',
             title: 'Oops!',
-            text: 'Something went wrong.'
+            text: 'Something went wrong while adding to cart.',
         });
     }
 
-
-    /**
-     * Cart content...
-     */
+    // ✅ When updating quantity
     handleCartItemUpdate(rowId, quantity) {
         $.ajax({
             url: window.cartUpdateUrl,
@@ -426,13 +450,26 @@ class CartManager {
             success: (res) => {
                 this.cart = res;
                 this.cartContent();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Cart Updated!',
+                    text: res.message || 'Cart item updated successfully.',
+                    showConfirmButton: false,
+                    timer: 1200
+                });
             },
             error: () => {
-                this.handleCartError($btn);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Unable to update cart item.',
+                });
             }
         });
     }
 
+    // ✅ When deleting an item
     handleCartItemDelete(btn, rowId) {
         $.ajax({
             url: window.cartRemoveUrl,
@@ -444,82 +481,150 @@ class CartManager {
             success: (res) => {
                 this.cart = res;
                 this.cartContent();
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Removed!',
+                    text: res.message || 'Item removed from cart.',
+                    showConfirmButton: false,
+                    timer: 1200
+                });
             },
             error: () => {
-                this.handleCartError(btn);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'Unable to remove item from cart.',
+                });
+            }
+        });
+    }
+    
+    // use for dropdown effect (optional)
+    minicart_dropdown() {
+        $(".site-header__cart").off("click").on("click", function (e) {
+            e.preventDefault();
+            $(this).siblings(".block-cart").slideToggle();
+        });
+
+        $("body").off("click").on("click", function (event) {
+            const $target = $(event.target);
+            if (!$target.closest(".site-cart").length) {
+                $(".block-cart").slideUp();
             }
         });
     }
 
     cartContent() {
-        const cart = this.cart.data;
+        const cart = this.cart?.data;
+        if (!cart) {
+            console.error("Cart data missing", this.cart);
+            return;
+        }
 
+        // ✅ Update summary
         this.addCartSummaryToContainer(cart);
 
-        const cartItemContainer = document.querySelectorAll(".cart-item-container");
+        // ✅ Update cart item container
+        const cartItemContainer = document.querySelectorAll(".site-cart");
         cartItemContainer.forEach(element => {
             this.addCartItemToContainer(cart, element);
         });
     }
 
-    addCartItemToContainer(cart, container, view = 'offcanvas') {
-        let cart_items = cart.items;
+    addCartItemToContainer(cart, container) {
+        const cart_items = cart.items ? Object.values(cart.items) : [];
+
         if (cart_items.length === 0) {
-            container.innerHTML = `<p class="text-muted text-center">Your cart is empty.</p>`;
-            return;
-        }
-        let html = "";
-
-        Object.values(cart_items).forEach(item => {
-      
-            let attributes = "";
-            let qty = "";
-            let image = "";
-            if (item.options.attributes !== null) {
-                attributes = Object.entries(item.options.attributes).map(([key, value]) => `
-                    <span><strong>${key.toUpperCase()}:</strong> ${value.toUpperCase()}</span>
-                `).join(" ");
-            }
-            if (item.qty !== 0) {
-                qty = `<div class="quantity-selector">
-                    <button class="cart-quantity-btn update-cart-item" type="button" data-row-id="${item.rowId}" max="${item.options.stock}" data-quantity="${Number(item.qty) - 1}">-</button>
-                    <input class="cart-quantity-input update-cart-item" type="number" data-row-id="${item.rowId}" value="${item.qty}" max="${item.options.stock}">
-                    <button class="cart-quantity-btn update-cart-item" type="button" data-row-id="${item.rowId}" max="${item.options.stock}" data-quantity="${Number(item.qty) + 1}">+</button>
-                </div>`;
-            }
-            if(item.options.image) {
-                image = `<div class="cart-item-image"><img src="${item.options.image[0]}" alt="${item.name}"></div>`;
-            }
-            html += `
-            <div class="cart-item" data-row-id="${item.rowId}">
-                ${image}
-
-                <div class="cart-body">
-                    <div class="cart-item-name">
-                        <span class="cart-item-sku">${item.options.sku}</span>
-                        <h5>${item.name}</h5>
-                    </div>
-                    <div class="cart-attributes">
-                        ${attributes}
-                    </div>
-                    <div class="cart-price-qty-item">
-                        <div class="cart-stock">
-                            ${qty}
-                        </div>
-                        <div class="cart-total">
-                            <b>${cart.symbol + item.subtotal}</b>
-                        </div>
-                    </div>
-                    
-                    <div class="cart-action">
-                        <button type="button" class="btn btn-danger btn-sm delete-cart-item" data-row-id="${item.rowId}">&times;</button>
+            container.innerHTML = `
+            <a href="#" class="site-header__cart" title="Cart">
+                <i class="icon anm anm-bag-l"></i>
+                <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">${cart.count}</span>
+            </a>
+            <div id="header-cart" class="block block-cart">
+                <div class="total">
+                    <div class="total-in">
+                        <span class="label"><center>Your Cart is Empty!</center></span>
                     </div>
                 </div>
             </div>
-            `;
+        `
+            this.minicart_dropdown();
+            return;
+        }
+
+        let rows = "";
+        cart_items.forEach(item => {
+            const imagePath = item?.options?.image; // ✅ get image path from backend
+
+            const image = imagePath
+                ? `${window.storageUrl}${imagePath}` // ✅ use global storage URL
+                : "/themeAssets/images/images.jpg";  // ✅ fallback image
+
+            const name = item?.name ?? "Unnamed";
+            const sku = item?.options?.sku ?? "-";
+            const price = item?.price ?? 0;
+            const qty = item?.qty ?? 0;
+            rows += `
+            <li class="item">
+                <a class="product-image" href="#">
+                    <img class="cart__image" src="${image}" alt="${name}">
+                </a>
+                <div class="product-details">
+                    <a href="#" class="remove cart__remove delete-cart-item" data-row-id="${item.rowId}">
+                        <i class="anm anm-times-l" aria-hidden="true"></i>
+                    </a>
+                    <a class="pName" href="#">${name}</a>
+                    <div class="variant-cart">${sku}</div>
+                    <!-- <div class="wrapQtyBtn">
+                        <div class="qtyField">
+                            <span class="label">Qty:</span>
+                            <a class="qtyBtn minus" href="javascript:void(0);"><i class="icon icon-minus"></i></a>
+                            <input class="cart__qty-input qty" type="text" value="${qty}" data-row-id="${item.rowId}">
+                            <a class="qtyBtn plus" href="javascript:void(0);"><i class="icon icon-plus"></i></a>
+                        </div>
+                    </div> -->
+                    <div class="priceRow">
+                        <div class="product-price">
+                            <span class="money">${qty} × ${cart.symbol}${price}</span>
+                        </div>
+                    </div>
+                </div>
+            </li>
+        `;
         });
-        container.innerHTML = html;
+
+        const subtotal = cart.total?.subtotal ?? 0;
+        const currency = cart.symbol ?? "Rs";
+
+        container.innerHTML = `
+        <a href="#" class="site-header__cart" title="Cart">
+            <i class="icon anm anm-bag-l"></i>
+            <span id="CartCount" class="site-header__cart-count" data-cart-render="item_count">${cart.count}</span>
+        </a>
+        <!--Minicart Popup-->
+        <div id="header-cart" class="block block-cart">
+            <ul class="mini-products-list">
+                ${rows}
+            </ul>
+            <div class="total">
+                <div class="total-in">
+                    <span class="label">Cart Subtotal:</span>
+                    <span class="product-price">
+                        <span class="money">${currency}${subtotal}</span>
+                    </span>
+                </div>
+                <div class="buttonSet text-center">
+                    <a href="${window.cart}" class="btn btn-secondary btn--small">View Cart</a>
+                    <a href="${window.checkout}" class="btn btn-secondary btn--small">Checkout</a>
+                </div>
+            </div>
+        </div>
+    `
+        this.minicart_dropdown();
+
     }
+
     addCartSummaryToContainer(cart) {
         const cartCouter = document.querySelectorAll('.cart-count');
         const cartTotal = document.querySelectorAll(".cart-total");
@@ -528,31 +633,23 @@ class CartManager {
         const cartTax = document.querySelectorAll(".cart-tax");
 
         if (cartTax.length > 0) {
-            cartTax.forEach(element => {
-                element.textContent = cart.total.tax;
-            });
+            cartTax.forEach(el => el.textContent = cart.total.tax);
         }
-        
+
         if (cartDiscount.length > 0) {
-            cartDiscount.forEach(element => {
-                element.textContent = cart.total.discount;
-            });
+            cartDiscount.forEach(el => el.textContent = cart.total.discount);
         }
 
         if (cartTotal.length > 0) {
-            cartTotal.forEach(element => {
-                element.textContent = cart.total.subtotal;
-            });
+            cartTotal.forEach(el => el.textContent = cart.symbol + cart.total.subtotal);
         }
+
         if (cartGrandTotal.length > 0) {
-            cartGrandTotal.forEach(element => {
-                element.textContent = cart.total.total;
-            });
+            cartGrandTotal.forEach(el => el.textContent = cart.symbol + cart.total.total);
         }
+
         if (cartCouter.length > 0) {
-            cartCouter.forEach(element => {
-                element.textContent = cart.count;
-            });
+            cartCouter.forEach(el => el.textContent = cart.count);
         }
     }
 }

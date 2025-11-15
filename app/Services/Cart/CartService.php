@@ -18,11 +18,30 @@ class CartService
     public function addProduct($request)
     {
         $product = $this->getProduct($request);
+        $productQty = Product::findOrFail($request->product_id);
+        $qty = (int) $request->qty;
 
+        // ✅ Check stock
+        if ($qty > $productQty->qty) {
+            throw new \Exception("Only {$productQty->qty} units available in stock.");
+        }
+
+        // ✅ Check if product already in cart
+        $cartItems = Cart::instance('shopping')->content();
+        $existingItem = $cartItems->first(function ($item) use ($product) {
+            return $item->id == $product['id'] &&
+                ($item->options->variant_id ?? null) == ($product['variant_id'] ?? null);
+        });
+
+        if ($existingItem && $existingItem->qty <= 2) {
+            throw new \Exception("Product already added to cart.");
+        }
+
+        // ✅ Add to cart
         Cart::instance('shopping')->add(
             $product['id'],
             $product['name'],
-            $request->qty ?? 1,
+            $qty ?? 1,
             $product['final_price'],
             0,
             [
@@ -37,6 +56,7 @@ class CartService
 
         return $this->cartSummary();
     }
+
 
     public function updateProduct($request)
     {
@@ -77,6 +97,17 @@ class CartService
         $sku = $variant ? $variant->sku : $product->sku;
         $attributes = $variant ? $variant->attributes : null;
 
+        // 🖼️ Image handling fix — if image is an array, take the first one
+        $image = null;
+        if (is_array($product->image)) {
+            $image = $product->image[0] ?? null;
+        } else {
+            $image = $product->image;
+        }
+
+        // Optional: if you have image_url accessor or helper
+        $imageUrl = $image ? (is_string($image) ? $image : $product->image_url) : null;
+
         return [
             'id' => $product->id,
             'name' => $product->name,
@@ -85,7 +116,7 @@ class CartService
             'sale_price' => $salePrice,
             'variant_id' => $variant?->id,
             'sku' => $sku,
-            'image' => $product->image ? $product->image_url : null,
+            'image' => $imageUrl,
             'attributes' => $attributes,
         ];
     }
@@ -94,8 +125,8 @@ class CartService
     {
         $cart = Cart::instance('shopping');
         return [
-            'currency' => 'USD',
-            'symbol' => '$',
+            'currency' => 'INR',
+            'symbol' => '₹',
             'count' => $cart->count(),
             'total' => [
                 'subtotal' => $cart->subtotal(2, '.', ','),

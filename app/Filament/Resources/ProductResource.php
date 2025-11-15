@@ -126,6 +126,29 @@ class ProductResource extends Resource
                                     ->hintIcon('heroicon-m-question-mark-circle', tooltip: 'Meta description for search engines.'),
                             ])
                             ->collapsible(),
+
+                        Section::make('Sale Platforms')
+                            ->schema([
+                                Forms\Components\Repeater::make('sale_links')
+                                    ->label('Sale Links')
+                                    ->schema([
+                                        Select::make('icon')
+                                            ->label('Icon')
+                                            ->options([
+                                                'amazon' => 'Amazon',
+                                                'flipkart' => 'Flipkart',
+                                                'meesho' => 'Meesho',
+                                            ]),
+
+                                        Forms\Components\TextInput::make('url')
+                                            ->label('URL')
+                                            ->url(),
+                                    ])
+                                    ->addActionLabel('Add Sale Link')
+                                    ->columns(2)
+                                    ->columnSpanFull(),
+                            ])
+                            ->collapsible(),
                     ]),
 
                     Section::make([
@@ -193,134 +216,134 @@ class ProductResource extends Resource
     }
 
     public static function table(Table $table): Table
-{
-    return $table
-        ->columns([
-            \Filament\Tables\Columns\ImageColumn::make('image')
-                ->label('Image')
-                ->disk('public')
-                ->size(50),
+    {
+        return $table
+            ->columns([
+                \Filament\Tables\Columns\ImageColumn::make('image')
+                    ->label('Image')
+                    ->disk('public')
+                    ->size(50),
 
-            \Filament\Tables\Columns\TextColumn::make('name')
-                ->sortable()
-                ->searchable(),
+                \Filament\Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
 
-            \Filament\Tables\Columns\TextInputColumn::make('qty')
-                ->label('Stock')
-                ->type('number')
-                ->extraInputAttributes([
-                    'min'  => 0,
-                    'step' => '1',
-                ])
-                ->rules(['integer', 'min:0'])
-                ->sortable(),
-
-            // 💰 Regular Price
-            \Filament\Tables\Columns\TextInputColumn::make('price')
-                ->label('Regular Price')
-                ->type('number')
-                ->rules(['numeric', 'min:0'])
-                ->extraInputAttributes([
-                    'min'  => 0,
-                    'step' => '0.01',
-                ])
-                ->sortable(),
-
-            // 🏷️ Sale Price
-            \Filament\Tables\Columns\TextInputColumn::make('sale_price')
-                ->label('Sale Price')
-                ->type('number')
-                ->rules(['numeric', 'min:0'])
-                ->extraInputAttributes([
-                    'min'  => 0,
-                    'step' => '0.01',
-                ])
-                ->sortable(),
-
-            \Filament\Tables\Columns\SelectColumn::make('status')
-                ->label('Status')
-                ->options(
-                    collect(\App\Models\Enums\ProductStatus::cases())
-                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
-                        ->toArray()
-                )
-                ->sortable(),
-        ])
-
-        ->filters([
-            \Filament\Tables\Filters\SelectFilter::make('status')
-                ->options(
-                    collect(\App\Models\Enums\ProductStatus::cases())
-                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
-                        ->toArray()
-                ),
-
-            \Filament\Tables\Filters\SelectFilter::make('featured')
-                ->options(
-                    collect(\App\Models\Enums\ProductFeaturedStatus::cases())
-                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
-                        ->toArray()
-                ),
-
-            \Filament\Tables\Filters\SelectFilter::make('category')
-                ->label('Category')
-                ->options(\App\Models\ProductCategory::pluck('name', 'id'))
-                ->query(function ($query, array $data) {
-                    if (!empty($data['value'])) {
-                        $query->whereJsonContains('category_id', [(string) $data['value']]);
-                    }
-                }),
-        ])
-
-        ->actions([
-            Tables\Actions\EditAction::make(),
-            Tables\Actions\DeleteAction::make(),
-        ])
-
-        ->bulkActions([
-            Tables\Actions\BulkActionGroup::make([
-                Tables\Actions\DeleteBulkAction::make(),
-
-                Tables\Actions\BulkAction::make('updateStatus')
-                    ->label('Update Status')
-                    ->icon('heroicon-o-check-badge')
-                    ->form([
-                        \Filament\Forms\Components\Select::make('status')
-                            ->label('Status')
-                            ->options(
-                                collect(\App\Models\Enums\ProductStatus::cases())
-                                    ->mapWithKeys(fn($status) => [$status->value => $status->label()])
-                                    ->toArray()
-                            )
-                            ->required(),
+                \Filament\Tables\Columns\TextInputColumn::make('qty')
+                    ->label('Stock')
+                    ->type('number')
+                    ->extraInputAttributes([
+                        'min'  => 0,
+                        'step' => '1',
                     ])
-                    ->action(function (array $data, $records) {
-                        foreach ($records as $record) {
-                            $record->update(['status' => $data['status']]);
+                    ->rules(['integer', 'min:0'])
+                    ->sortable(),
+
+                // 💰 Regular Price
+                \Filament\Tables\Columns\TextInputColumn::make('price')
+                    ->label('Regular Price')
+                    ->type('number')
+                    ->rules(['numeric', 'min:0'])
+                    ->extraInputAttributes([
+                        'min'  => 0,
+                        'step' => '0.01',
+                    ])
+                    ->sortable(),
+
+                // 🏷️ Sale Price
+                \Filament\Tables\Columns\TextInputColumn::make('sale_price')
+                    ->label('Sale Price')
+                    ->type('number')
+                    ->rules(['numeric', 'min:0'])
+                    ->extraInputAttributes([
+                        'min'  => 0,
+                        'step' => '0.01',
+                    ])
+                    ->sortable(),
+
+                \Filament\Tables\Columns\SelectColumn::make('status')
+                    ->label('Status')
+                    ->options(
+                        collect(\App\Models\Enums\ProductStatus::cases())
+                            ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                            ->toArray()
+                    )
+                    ->sortable(),
+            ])
+
+            ->filters([
+                \Filament\Tables\Filters\SelectFilter::make('status')
+                    ->options(
+                        collect(\App\Models\Enums\ProductStatus::cases())
+                            ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                            ->toArray()
+                    ),
+
+                \Filament\Tables\Filters\SelectFilter::make('featured')
+                    ->options(
+                        collect(\App\Models\Enums\ProductFeaturedStatus::cases())
+                            ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                            ->toArray()
+                    ),
+
+                \Filament\Tables\Filters\SelectFilter::make('category')
+                    ->label('Category')
+                    ->options(\App\Models\ProductCategory::pluck('name', 'id'))
+                    ->query(function ($query, array $data) {
+                        if (!empty($data['value'])) {
+                            $query->whereJsonContains('category_id', [(string) $data['value']]);
                         }
                     }),
+            ])
 
-                Tables\Actions\BulkAction::make('updateFeatured')
-                    ->label('Update Featured')
-                    ->icon('heroicon-o-star')
-                    ->form([
-                        \Filament\Forms\Components\Select::make('featured')
-                            ->label('Featured')
-                            ->options(
-                                collect(\App\Models\Enums\ProductFeaturedStatus::cases())
-                                    ->mapWithKeys(fn($featured) => [$featured->value => $featured->label()])
-                                    ->toArray()
-                            )
-                            ->required(),
-                    ])
-                    ->action(function (array $data, $records) {
-                        foreach ($records as $record) {
-                            $record->update(['featured' => $data['featured']]);
-                        }
-                    }),
-            ]),
-        ]);
-}
+            ->actions([
+                Tables\Actions\EditAction::make(),
+                Tables\Actions\DeleteAction::make(),
+            ])
+
+            ->bulkActions([
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make(),
+
+                    Tables\Actions\BulkAction::make('updateStatus')
+                        ->label('Update Status')
+                        ->icon('heroicon-o-check-badge')
+                        ->form([
+                            \Filament\Forms\Components\Select::make('status')
+                                ->label('Status')
+                                ->options(
+                                    collect(\App\Models\Enums\ProductStatus::cases())
+                                        ->mapWithKeys(fn($status) => [$status->value => $status->label()])
+                                        ->toArray()
+                                )
+                                ->required(),
+                        ])
+                        ->action(function (array $data, $records) {
+                            foreach ($records as $record) {
+                                $record->update(['status' => $data['status']]);
+                            }
+                        }),
+
+                    Tables\Actions\BulkAction::make('updateFeatured')
+                        ->label('Update Featured')
+                        ->icon('heroicon-o-star')
+                        ->form([
+                            \Filament\Forms\Components\Select::make('featured')
+                                ->label('Featured')
+                                ->options(
+                                    collect(\App\Models\Enums\ProductFeaturedStatus::cases())
+                                        ->mapWithKeys(fn($featured) => [$featured->value => $featured->label()])
+                                        ->toArray()
+                                )
+                                ->required(),
+                        ])
+                        ->action(function (array $data, $records) {
+                            foreach ($records as $record) {
+                                $record->update(['featured' => $data['featured']]);
+                            }
+                        }),
+                ]),
+            ]);
+    }
 
 
     public static function getRelations(): array

@@ -28,6 +28,7 @@ class Product extends Model
     }
 
     protected $casts = [
+        'sale_links'    => 'array',
         'category_id'   => 'array',
         'domain_ids'    => 'array',
         'brand_logo'    => 'array',

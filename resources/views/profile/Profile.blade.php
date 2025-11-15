@@ -266,11 +266,37 @@
             <div class="card">
                 <h3>Recent Orders</h3>
                 @if(isset($orders) && count($orders) > 0)
-                <ul>
-                    @foreach ($orders as $order)
-                    <li>#{{ $order->id }} – {{ ucfirst($order->status) }}</li>
-                    @endforeach
-                </ul>
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Total Items</th>
+                            <th scope="col">Payment Type</th>
+                            <th scope="col">Payment Id</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach ($orders as $order)
+                        <tr>
+                            <th scope="row">{{$order->id}}</th>
+                            <td>
+                                {{ $order->products->first()->name }}
+                                @if($order->products->count() > 1)
+                                + {{ $order->products->count() - 1 }} more
+                                @endif
+                            </td>
+                            <td>{{ $order->products->sum('qty') }}</td>
+                            <td>{{$order->payment_type}}</td>
+                            <td>{{$order->transaction_id}}</td>
+                            <td>{{$order->net_total}}</td>
+                            <td><a href="{{ route('order.view', $order->id) }}">View</a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
                 @else
                 <p style="color:#6b7280;">No orders found.</p>
                 @endif
@@ -281,9 +307,9 @@
         <div id="wishlist" class="section">
             <div class="card">
                 <h3>Wishlist</h3>
-                
+
                 <p style="color:#6b7280;">Your wishlist is empty.</p>
-                
+
             </div>
         </div>
 
@@ -302,14 +328,14 @@
 
 
 <script>
-async function logoutUser(e) {
-    e.preventDefault();
-    await fetch("{{ route('logout') }}", {
-        method: "POST",
-        headers: {
-            "X-CSRF-TOKEN": "{{ csrf_token() }}",
-        }
-    });
-    window.location.href = "/";
-}
+    async function logoutUser(e) {
+        e.preventDefault();
+        await fetch("{{ route('logout') }}", {
+            method: "POST",
+            headers: {
+                "X-CSRF-TOKEN": "{{ csrf_token() }}",
+            }
+        });
+        window.location.href = "/";
+    }
 </script>

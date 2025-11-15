@@ -39,26 +39,33 @@ Route::get('form-save', [FormController::class, 'formsave'])->name('form.save');
 
 Route::get('cart', [CartController::class, 'cart'])->name('cart');
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/update', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
-Route::post('/cart/remove', [CartController::class, 'removeItem'])->name('cart.removeItem');
+Route::post('/cart/remove-item', [CartController::class, 'removeItem'])->name('cart.removeItem');
+Route::post('/cart/update-quantity', [CartController::class, 'updateQuantity'])->name('cart.updateQuantity');
 Route::post('/cart/header', [CartController::class, 'cartHeader'])->name('cart.header');
 
-// WishList 
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
 
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/return-refund', [HomeController::class, 'returnRefund'])->name('return.refund');
 
+Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
+Route::post('checkout/process', [OrderController::class, 'doOrder'])->name('checkout.process');
+Route::get('/order-complete', [OrderController::class, 'orderComplete'])->name('order.complete');
+
 // --------------------
 // Authenticated & Verified User Routes
 // --------------------
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/checkout', [CartController::class, 'checkout'])->name('cart.checkout');
-    Route::post('checkout/process', [OrderController::class, 'doOrder'])->name('checkout.process');
-    Route::get('thank-you', [OrderController::class, 'thankyou'])->name('thank.you');
 
-    // Payment
+    Route::get('/order/{id}', [OrderController::class, 'orderView'])
+        ->name('order.view');
+
+    // Download invoice
+    Route::get('/order/{id}/invoice', [OrderController::class, 'downloadInvoice'])
+        ->name('order.invoice');
+
+    Route::get('thank-you', [OrderController::class, 'thankyou'])->name('thank.you');
     Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 });
 
