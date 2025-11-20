@@ -247,12 +247,7 @@
                             <li class="display-table-cell">
                                 <i class="icon anm anm-truck-l"></i>
                                 <h5>Free Shipping &amp; Return</h5>
-                                <span class="sub-text">Free shipping on all US orders</span>
-                            </li>
-                            <li class="display-table-cell">
-                                <i class="icon anm anm-dollar-sign-r"></i>
-                                <h5>Money Guarantee</h5>
-                                <span class="sub-text">30 days money back guarantee</span>
+                                <span class="sub-text">Free shipping on all orders</span>
                             </li>
                             <li class="display-table-cell">
                                 <i class="icon anm anm-comments-l"></i>
@@ -263,6 +258,12 @@
                                 <i class="icon anm anm-credit-card-front-r"></i>
                                 <h5>Secure Payments</h5>
                                 <span class="sub-text">All payment are Secured and trusted.</span>
+                            </li>
+
+                            <li class="display-table-cell">
+                                <i class="icon anm anm-truck-l"></i>
+                                <h5>Delivery</h5>
+                                <span class="sub-text">All India delivery</span>
                             </li>
                         </ul>
                     </div>
