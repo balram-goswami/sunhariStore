@@ -74,7 +74,7 @@ return new class extends Migration
         Schema::create('products_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->noActionOnDelete();
-            $table->foreignId('customer_id')->nullable()->constrained('customers')->noActionOnDelete();
+            $table->foreignId('customer_id')->nullable()->constrained('users')->noActionOnDelete();
             $table->integer('rating')->comment('1 to 5 stars');
             $table->text('review')->nullable();
             $table->boolean('is_approved')->default(0);

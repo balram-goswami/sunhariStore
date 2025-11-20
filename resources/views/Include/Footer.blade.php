@@ -78,37 +78,49 @@ $data = siteSetting();
                     <div class="col-12 col-sm-12 col-md-3 col-lg-3 contact-box">
                         <h4 class="h4">Contact Us</h4>
                         <ul class="addressFooter">
-                            <li><i class="icon anm anm-map-marker-al"></i>
+                            <li>
+                                <i class="icon anm anm-map-marker-al"></i>
                                 <p>{{ $data->address ?? '' }} {{ $data->city ?? '' }} {{ $data->state ?? '' }}</p>
                             </li>
+
                             <li class="phone">
                                 <i class="icon anm anm-phone-s"></i>
-                                <p><a href="tel:{{ $data->phone ?? '' }}" style="color: white">
+                                <p>
+                                    <a href="tel:{{ $data->phone ?? '' }}" style="color: white;">
                                         {{ $data->phone ?? '' }}
-                                    </a></p>
+                                    </a>
+                                </p>
                             </li>
+
                             @if(isset($data->alternate_phone))
                             <li class="phone">
                                 <i class="icon anm anm-phone-s"></i>
-                                <p><a href="tel:{{ $data->alternate_phone ?? '' }}" style="color: white">
-                                        {{ $data->alternate_phone ?? '' }}
-                                    </a></p>
+                                <p>
+                                    <a href="tel:{{ $data->alternate_phone }}" style="color: white;">
+                                        {{ $data->alternate_phone }}
+                                    </a>
+                                </p>
                             </li>
                             @endif
+
                             <li class="email">
                                 <i class="icon anm anm-envelope-l"></i>
-                                <p><a href="mailto:{{ $data->email ?? '' }}" style="color: white">
+                                <p>
+                                    <a href="mailto:{{ $data->email ?? '' }}" style="color: white;">
                                         {{ $data->email ?? '' }}
-                                    </a></p>
+                                    </a>
+                                </p>
                             </li>
                         </ul>
                     </div>
+
                     <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
                         <h4 class="h4">Useful Links</h4>
                         <ul>
                             <li><a href="{{ route('contuct-us') }}">Contact Us</a></li>
                             <li><a href="{{ route('about-us') }}">About Us</a></li>
                             <li><a href="{{ route('products') }}">Shop</a></li>
+
                             @auth
                             @if(auth()->user()->isAdmin())
                             <li><a href="{{ url('/admin/admin-dashboard') }}">Admin Dashboard</a></li>
@@ -121,16 +133,13 @@ $data = siteSetting();
                             <li><a href="{{ route('login') }}">Login</a></li>
                             <li><a href="{{ route('register') }}">Create Account</a></li>
                             @endauth
-
-                            <li><a href="{{ route('terms') }}">T&C</a></li>
-                            <li><a href="{{ route('return.refund') }}">Return/Refund</a></li>
                         </ul>
                     </div>
-                    @php
-                    // Ensure $data exists and we have an array
-                    $socialLinks = is_array($data?->social_links) ? $data->social_links : [];
 
+                    @php
+                    $socialLinks = is_array($data?->social_links) ? $data->social_links : [];
                     $social = [];
+
                     foreach ($socialLinks as $link) {
                     if (!empty($link['icon']) && !empty($link['url'])) {
                     $social[strtolower($link['icon'])] = $link['url'];
@@ -148,7 +157,19 @@ $data = siteSetting();
                             @endforeach
                         </ul>
                     </div>
-                    <div class="footer-facebook">
+
+                    <div class="col-12 col-sm-12 col-md-3 col-lg-3 footer-links">
+                        <h4 class="h4">Policies</h4>
+                        <ul>
+                            <li><a href="{{ route('policies') }}">Privacy Policy</a></li>
+                            <li><a href="{{ route('shipping') }}">Shipping & Delivery</a></li>
+                            <li><a href="{{ route('terms') }}">Terms & Conditions</a></li>
+                            <li><a href="{{ route('return.refund') }}">Return & Refund Policy</a></li>
+                        </ul>
+                    </div>
+
+
+                    <!-- <div class="footer-facebook">
                         <div id="fb-root"></div>
                         <script async defer crossorigin="anonymous"
                             src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v17.0"></script>
@@ -166,7 +187,7 @@ $data = siteSetting();
                                 <a href="https://www.facebook.com/profile.php?id=61579472553589">Facebook Page</a>
                             </blockquote>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
             </div>
 

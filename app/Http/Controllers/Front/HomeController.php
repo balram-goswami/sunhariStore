@@ -105,6 +105,38 @@ class HomeController extends Controller
     return view('Front', compact('view', 'breadcrumbs'));
   }
 
+  public function policies()
+  {
+    $view = "Templates.policies";
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Policy - Sunhari.in',
+      'metaTitle' => $data->meta_title ?? 'Sunhari',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
+
+    return view('Front', compact('view', 'breadcrumbs'));
+  }
+
+  public function shipping()
+  {
+    $view = "Templates.policies";
+    $breadcrumbs = [
+      'title' => $data->meta_title ?? 'Shipping & Delivery Policy - Sunhari.in',
+      'metaTitle' => $data->meta_title ?? 'Shipping & Delivery Policy - Sunhari.in',
+      'metaDescription' => $data->meta_description ?? 'Sunhari -  Where Tradition Shines',
+      'metaKeyword' => '',
+      'links' => [
+        ['url' => url('/'), 'title' => 'Home']
+      ]
+    ];
+
+    return view('Front', compact('view', 'breadcrumbs'));
+  }
+
   public function returnRefund()
   {
     $view = "Templates.Return-refund";

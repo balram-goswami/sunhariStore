@@ -46,6 +46,8 @@ Route::post('/cart/header', [CartController::class, 'cartHeader'])->name('cart.h
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
 
+Route::get('/policies', [HomeController::class, 'policies'])->name('policies');
+Route::get('/shipping', [HomeController::class, 'shipping'])->name('shipping');
 Route::get('/terms', [HomeController::class, 'terms'])->name('terms');
 Route::get('/return-refund', [HomeController::class, 'returnRefund'])->name('return.refund');
 

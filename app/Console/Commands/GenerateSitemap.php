@@ -10,30 +10,37 @@ use App\Models\Product;
 class GenerateSitemap extends Command
 {
     protected $signature = 'sitemap:generate';
-    protected $description = 'Generate the sitemap.xml file';
+    protected $description = 'Automatically generate sitemap.xml file';
 
     public function handle()
     {
         $sitemap = Sitemap::create();
 
-        // ✅ Home
+        // Home Page
         $sitemap->add(
             Url::create(route('homePage'))
                 ->setPriority(1.0)
                 ->setChangeFrequency(Url::CHANGE_FREQUENCY_DAILY)
         );
 
-        // ✅ Static Pages
-        $sitemap->add(Url::create(route('about-us')));
-        $sitemap->add(Url::create(route('contuct-us')));
+        // Static Pages
+        $staticRoutes = [
+            'about-us',
+            'contuct-us',
+            'products',
+            'policies',
+            'shipping',
+            'terms',
+            'return.refund'
+        ];
 
-        // ✅ Shop & Products List
-        $sitemap->add(Url::create(route('products')));
+        foreach ($staticRoutes as $route) {
+            if (route($route, [], false)) {
+                $sitemap->add(Url::create(route($route)));
+            }
+        }
 
-        // ✅ Profile Page (authenticated, but still useful for indexing if public)
-        $sitemap->add(Url::create(route('profile')));
-
-        // ✅ Products (dynamic)
+        // Dynamic Products
         foreach (Product::where('status', 2)->get() as $product) {
             $sitemap->add(
                 Url::create(route('product', $product->slug))
@@ -41,7 +48,7 @@ class GenerateSitemap extends Command
             );
         }
 
-        // Save sitemap.xml in public/
+        // Generate File
         $sitemap->writeToFile(public_path('sitemap.xml'));
 
         $this->info('✅ Sitemap generated successfully!');

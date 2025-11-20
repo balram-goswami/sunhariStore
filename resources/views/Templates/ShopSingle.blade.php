@@ -156,7 +156,7 @@
                                 </div> -->
 
                             @if ($product->qty >= 1)
-                            <!-- <div class="product-form__item--submit">
+                            <div class="product-form__item--submit">
                                     <button type="button" name="add" class="btn product-form__cart-submit">
                                         <span>Add to cart</span>
                                     </button>
@@ -166,14 +166,14 @@
                                         class="shopify-payment-button__button shopify-payment-button__button--unbranded">
                                         Buy it now
                                     </button>
-                                </div> -->
+                                </div>
 
-                            <div class="product-form__item--submit">
+                            <!-- <div class="product-form__item--submit">
                                 <a href="{{ url('/order-whatsapp/'.$product->id) }}"
                                     class="btn btn-success">
                                     Order on WhatsApp
                                 </a>
-                            </div>
+                            </div> -->
 
                             @else
                             <!-- Out of Stock → Show Coming Soon -->
