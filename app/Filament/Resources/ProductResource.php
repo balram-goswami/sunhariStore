@@ -222,9 +222,16 @@ class ProductResource extends Resource
                 \Filament\Tables\Columns\ImageColumn::make('image')
                     ->label('Image')
                     ->disk('public')
-                    ->size(50),
+                    ->size(50)
+                    ->getStateUsing(function ($record) {
+                        return is_array($record->image) ? $record->image[0] : json_decode($record->image, true)[0] ?? null;
+                    }),
 
                 \Filament\Tables\Columns\TextColumn::make('name')
+                    ->sortable()
+                    ->searchable(),
+
+                \Filament\Tables\Columns\TextColumn::make('sku')
                     ->sortable()
                     ->searchable(),
 
@@ -239,15 +246,15 @@ class ProductResource extends Resource
                     ->sortable(),
 
                 // 💰 Regular Price
-                \Filament\Tables\Columns\TextInputColumn::make('price')
-                    ->label('Regular Price')
-                    ->type('number')
-                    ->rules(['numeric', 'min:0'])
-                    ->extraInputAttributes([
-                        'min'  => 0,
-                        'step' => '0.01',
-                    ])
-                    ->sortable(),
+                // \Filament\Tables\Columns\TextInputColumn::make('price')
+                //     ->label('Regular Price')
+                //     ->type('number')
+                //     ->rules(['numeric', 'min:0'])
+                //     ->extraInputAttributes([
+                //         'min'  => 0,
+                //         'step' => '0.01',
+                //     ])
+                //     ->sortable(),
 
                 // 🏷️ Sale Price
                 \Filament\Tables\Columns\TextInputColumn::make('sale_price')
